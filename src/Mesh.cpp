@@ -2,7 +2,16 @@
 
 #include <stdio.h>
 
+Mesh::Mesh():
+	m_VAO(0), m_VBO(0), m_EBO(0), m_indicesCount(0) 
+{ }
+
 Mesh::Mesh(const std::vector<VertexData>& vertex, const std::vector<GLuint>& indices)
+{
+	create(vertex, indices);
+}
+
+void Mesh::create(const std::vector<VertexData>& vertex, const std::vector<GLuint>& indices)
 {
 	m_indicesCount = indices.size();
 

@@ -20,9 +20,11 @@ constexpr VertexData genVertexData(float d1, float d2, float d3, float d4, float
 
 class Mesh {
 public:
+	Mesh();
 	Mesh(const std::vector<VertexData>& vertex, const std::vector<GLuint>& indices);
 	~Mesh();
 
+	void create(const std::vector<VertexData>& vertex, const std::vector<GLuint>& indices);
 	void bind() const { glBindVertexArray(m_VAO); };
 	GLuint getIndicesCount() const { return m_indicesCount; };
 private:

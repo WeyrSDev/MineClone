@@ -5,7 +5,15 @@
 #include "Shader.hpp"
 #include "util/Files.hpp"
 
+Shader::Shader() : m_program(0)
+{ }
+
 Shader::Shader(const char* vertex, const char* fragment)
+{
+	create(vertex, fragment);
+}
+
+void Shader::create(const char* vertex, const char* fragment)
 {
 	std::string vertexSrc = getFileSrc(std::string(shaderPath) + vertex);
 	std::string fragmentSrc = getFileSrc(std::string(shaderPath) + fragment);
