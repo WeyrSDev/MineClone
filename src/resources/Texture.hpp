@@ -8,6 +8,8 @@ class Texture {
 public:
 	Texture(std::string src);
 
+	void operator delete (void*) = delete;
+
 	void bind() const;
 	void unBind() const;
 private:

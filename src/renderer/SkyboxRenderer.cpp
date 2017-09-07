@@ -3,10 +3,10 @@
 #include <stdio.h>
 
 std::vector<VertexData> skyboxVertexArray() {
-	return { genVertexData(-1, 1, 0, 1, 0, 0), //Top left corner
-		genVertexData(1, 1, 0, 1, 1, 0), //Top right corner
-		genVertexData(1, -1, 0, 1, 1, 1), //Bottom right corner
-		genVertexData(-1, -1, 0, 1, 0, 1) }; //Bottom left corner
+	return { genVertexData(-1, 1, 0, 1, 0.25, 1.f / 3.f), //Top left corner
+		genVertexData(1, 1, 0, 1, 0.5, 1.f / 3.f), //Top right corner
+		genVertexData(1, -1, 0, 1, 0.5, 2.f / 3.f), //Bottom right corner
+		genVertexData(-1, -1, 0, 1, 0.25, 2.f / 3.f) }; //Bottom left corner
 };
 
 std::vector<GLuint> skyboxIndices()
