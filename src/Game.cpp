@@ -16,6 +16,8 @@ void Game::run()
 {
 	m_window.setActive(true);
 
+	m_window.setFramerateLimit(200);
+
 	m_clock.restart();
 	while(m_running && !m_scenes.empty()) 
 	{
@@ -61,6 +63,7 @@ void Game::handleEvents()
 				{
 					m_scenes.top()->keyDown(event.key);
 				}
+				break;
 			case sf::Event::Resized:
 				glViewport(0, 0, event.size.width, event.size.height);
 				break;

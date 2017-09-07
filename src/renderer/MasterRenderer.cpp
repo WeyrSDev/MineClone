@@ -10,19 +10,11 @@ MasterRenderer::MasterRenderer()
 
 void MasterRenderer::render(const Camera& camera)
 {
-	glm::mat4 view, projection, matSkybox;
+	glm::mat4 projectionMatrix = getProjectionMatrix(camera);
+	glm::mat4 viewMatrix = getViewMatrix(camera);
 
-	projection = glm::perspective(glm::radians(90.f), camera.aspectRatio, 0.01f, 2000.f);
+	glm::mat4 proViewMatrix = projectionMatrix * viewMatrix;
 
-	view = glm::rotate(view, glm::radians(camera.rotation.x), {1, 0, 0});
-	view = glm::rotate(view, glm::radians(camera.rotation.y), {0, 1, 0});
-	view = glm::rotate(view, glm::radians(camera.rotation.z), {0, 0, 1});
-
-	matSkybox = projection * view;
-
-	view = glm::translate(view, -camera.position);
-
-
-	glm::mat4 projView = projection * view;
+	glm::mat4 matSkybox = projectionMatrix * getSkyboxViewMatrix(camera);
 	m_skybox->render(matSkybox);
 }
