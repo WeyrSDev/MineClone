@@ -16,19 +16,23 @@ void Game::run()
 {
 	m_window.setActive(true);
 
+	m_clock.restart();
 	while(m_running && !m_scenes.empty()) 
 	{
 		handleEvents();
 
 		update();
 		draw();
+		
 	}
 }
 
 void Game::update()
 {
+	sf::Time delta = m_clock.restart();
+
 	if (!m_scenes.empty())
-		m_scenes.top()->update(0);
+		m_scenes.top()->update(delta.asSeconds());
 }
 
 void Game::draw() 

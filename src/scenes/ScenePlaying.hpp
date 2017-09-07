@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 
 #include"SceneBase.hpp"
-#include "renderer/SkyboxRenderer.hpp"
+#include "renderer/MasterRenderer.hpp"
 
 class ScenePlaying : public SceneBase {
 public:
@@ -13,5 +13,6 @@ public:
 	void render();
 	void keyDown(sf::Event::KeyEvent key);
 private:
-	SkyboxRenderer renderer;
+	MasterRenderer m_renderer;
+	Camera m_camera;
 };

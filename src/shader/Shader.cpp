@@ -59,6 +59,8 @@ void Shader::create(const char* vertex, const char* fragment)
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
+
+	m_transformMatrix = glGetUniformLocation(m_program, "transformMatrix");
 }
 
 Shader::~Shader()
@@ -69,4 +71,10 @@ Shader::~Shader()
 void Shader::bind()
 {
 	glUseProgram(m_program);
+}
+
+
+void Shader::setTransformMatrix(glm::mat4 matrix)
+{
+	glUniformMatrix4fv(m_transformMatrix, 1, GL_FALSE, glm::value_ptr(matrix));
 }

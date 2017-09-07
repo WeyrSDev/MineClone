@@ -28,6 +28,7 @@ private:
 	bool m_running = true;
 
 	sf::Window m_window;
+	sf::Clock m_clock;
 
 	std::stack<std::unique_ptr<SceneBase>> m_scenes;
 };

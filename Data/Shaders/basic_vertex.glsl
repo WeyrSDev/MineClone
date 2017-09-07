@@ -5,8 +5,10 @@ layout (location = 2) in vec2 texCoord;
 
 out vec2 TexCoord;
 
+uniform mat4 transformMatrix;
+
 void main()
 {
-	gl_Position = vec4(pos, 1.0);
+	gl_Position = transformMatrix * vec4(pos, 1.0);
 	TexCoord = texCoord;
 }
