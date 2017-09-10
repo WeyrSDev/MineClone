@@ -8,7 +8,7 @@ MapFinite::MapFinite(unsigned int size) :
 	{
 		for (int e = 0; e < m_chunkSize; e++)
 		{
-			m_chunks.push_back(Chunk(sf::Vector2i(e, i), this));
+			m_chunks.push_back(Chunk(Vec2(e, i), this));
 		}
 	}
 }
@@ -19,14 +19,22 @@ MapFinite::~MapFinite()
 
 }
 
+void MapFinite::update(MasterRenderer& renderer)
+{
+	for (auto& chunk : m_chunks)
+	{
+		chunk.update(renderer);
+	}
+}
+
 Block MapFinite::getBlock(int x, int y, int z) const
 {
-	if (outOfBounds(x, z) || z >= BlockHeight)
+	if (outOfBounds(x, z) || y >= BlockHeight)
 	{
 		return 0;
 	}
 
-	if (z < 0)
+	if (y < 0)
 	{
 		return 1;
 	}
@@ -37,12 +45,12 @@ Block MapFinite::getBlock(int x, int y, int z) const
 	int rx = x % ChunkLength;
 	int rz = z % ChunkLength;
 
-	m_chunks[cz * m_chunkSize + cx].getBlock(rx, y, rz);
+	return m_chunks[cz * m_chunkSize + cx].getBlock(rx, y, rz);
 }
 
 void MapFinite::setBlock(int x, int y, int z, Block block)
 {
-	if (outOfBounds(x, z) || z >= BlockHeight || z < 0)
+	if (outOfBounds(x, z) || y >= BlockHeight || y < 0)
 	{
 		return;
 	}
@@ -54,11 +62,6 @@ void MapFinite::setBlock(int x, int y, int z, Block block)
 	int rz = z % ChunkLength;
 
 	m_chunks[cz * m_chunkSize + cx].setBlock(rx, y, rz, block);
-}
-
-void MapFinite::update(MasterRenderer& renderer)
-{
-
 }
 
 bool MapFinite::outOfBounds(int x, int z) const

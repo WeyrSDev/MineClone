@@ -6,10 +6,10 @@ Mesh::Mesh():
 	m_VAO(0), m_VBO(0), m_EBO(0), m_indicesCount(0) 
 { }
 
-Mesh::Mesh(const std::vector<VertexData>& vertex, const std::vector<GLuint>& indices):
+Mesh::Mesh(const MeshData& data):
 	m_VAO(0), m_VBO(0), m_EBO(0), m_indicesCount(0) 
 {
-	create(vertex, indices);
+	create(data);
 }
 
 Mesh::~Mesh()
@@ -39,11 +39,11 @@ Mesh& Mesh::operator=(Mesh&& mesh)
 	return *this;
 }
 
-void Mesh::create(const std::vector<VertexData>& vertex, const std::vector<GLuint>& indices)
+void Mesh::create(const MeshData& data)
 {
 	destroy();
 
-	m_indicesCount = indices.size();
+	m_indicesCount = data.indices.size();
 
 	glGenVertexArrays(1, &m_VAO);
 	glBindVertexArray(m_VAO);
@@ -52,7 +52,7 @@ void Mesh::create(const std::vector<VertexData>& vertex, const std::vector<GLuin
 	glGenBuffers(1, &m_VBO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(VertexData) * vertex.size(), vertex.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(VertexData) * data.vertex.size(), data.vertex.data(), GL_STATIC_DRAW);
 
 	
 	//Vertex position
@@ -71,7 +71,7 @@ void Mesh::create(const std::vector<VertexData>& vertex, const std::vector<GLuin
 	//Copy indices to the GPU
 	glGenBuffers(1, &m_EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.indices.size() * sizeof(GLuint), data.indices.data(), GL_STATIC_DRAW);
 }
 
 void Mesh::destroy()

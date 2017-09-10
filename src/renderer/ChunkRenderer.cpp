@@ -13,10 +13,10 @@ void ChunkRenderer::addChunk(const ChunkSection& chunk)
 
 void ChunkRenderer::render()
 {
+	m_texture->bind();
 	for (auto chunk : m_visibleChunks)
 	{
 		const Mesh* mesh = chunk->getMesh();
-		m_texture->bind();
 
 		mesh->bind();
 

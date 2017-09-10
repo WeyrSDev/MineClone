@@ -3,20 +3,22 @@
 #include "ChunkSection.hpp"
 #include "map/Constants.hpp"
 
+class MasterRenderer;
+
 class Chunk {
 public:
-	Chunk(sf::Vector2i position, const MapBase* const map);
+	Chunk(Vec2 position, const MapBase* const map);
+
+	Vec3 toWorldPosition(int x, int y, int z) const;
 
 	Block getBlock(int x, int y, int z) const;
 	void setBlock(int x, int y, int z, Block block);
 	
-	void update();
-
+	void update(MasterRenderer& renderer);
 private:
-	sf::Vector3i toWorldPosition(int x, int y, int z) const;
 	bool outOfBound(int x, int y, int z) const;
 
-	const sf::Vector2i m_position;
+	const Vec2 m_position;
 
 	std::vector<ChunkSection> m_sections;
 	const MapBase* const m_map;

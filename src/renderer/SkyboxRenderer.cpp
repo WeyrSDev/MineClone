@@ -9,11 +9,10 @@ constexpr float yUnit = 1.f / 3.f;
 
 SkyboxRenderer::SkyboxRenderer()
 {
-	std::vector<VertexData> skyVertex;
-	std::vector<GLuint> skyIndex;
+	MeshData data;
 
 	//Front face
-	MeshUtil::pushFace(skyVertex, skyIndex, 
+	MeshUtil::pushFace(data, 
 		glm::vec3(-1, 1, -1) * skyboxSize,
 		glm::vec3(2, 0, 0) * skyboxSize,
 		glm::vec3(0, -2, 0) * skyboxSize,
@@ -22,7 +21,7 @@ SkyboxRenderer::SkyboxRenderer()
 		1.f);
 
 	//Right face 
-	MeshUtil::pushFace(skyVertex, skyIndex, 
+	MeshUtil::pushFace(data, 
 		glm::vec3(1, 1, -1) * skyboxSize,
 		glm::vec3(0, 0, 2) * skyboxSize,
 		glm::vec3(0, -2, 0) * skyboxSize,
@@ -30,7 +29,7 @@ SkyboxRenderer::SkyboxRenderer()
 		glm::vec2(xUnit, yUnit),
 		1.f);
 	//Back face 
-	MeshUtil::pushFace(skyVertex, skyIndex, 
+	MeshUtil::pushFace(data, 
 		glm::vec3(1, 1, 1) * skyboxSize,
 		glm::vec3(-2, 0, 0) * skyboxSize,
 		glm::vec3(0, -2, 0) * skyboxSize,
@@ -38,7 +37,7 @@ SkyboxRenderer::SkyboxRenderer()
 		glm::vec2(xUnit, yUnit),
 		1.f);
 	//Left face 
-	MeshUtil::pushFace(skyVertex, skyIndex, 
+	MeshUtil::pushFace(data, 
 		glm::vec3(-1, 1, 1) * skyboxSize,
 		glm::vec3(0, 0, -2) * skyboxSize,
 		glm::vec3(0, -2, 0) * skyboxSize,
@@ -46,7 +45,7 @@ SkyboxRenderer::SkyboxRenderer()
 		glm::vec2(xUnit, yUnit),
 		1.f);
 	//Top face 
-	MeshUtil::pushFace(skyVertex, skyIndex, 
+	MeshUtil::pushFace(data, 
 		glm::vec3(-1, 1, 1) * skyboxSize,
 		glm::vec3(2, 0, 0) * skyboxSize,
 		glm::vec3(0, 0, -2) * skyboxSize,
@@ -54,7 +53,7 @@ SkyboxRenderer::SkyboxRenderer()
 		glm::vec2(xUnit, yUnit),
 		1.f);
 	//Bottom face 
-	MeshUtil::pushFace(skyVertex, skyIndex, 
+	MeshUtil::pushFace(data, 
 		glm::vec3(-1, -1, -1) * skyboxSize,
 		glm::vec3(2, 0, 0) * skyboxSize,
 		glm::vec3(0, 0, 2) * skyboxSize,
@@ -64,7 +63,7 @@ SkyboxRenderer::SkyboxRenderer()
 
 	m_texture = TextureManager::get().getTexture("skybox.png");
 
-	m_skybox.create(skyVertex, skyIndex);
+	m_skybox.create(data);
 }
 
 void SkyboxRenderer::render(glm::mat4& transform)

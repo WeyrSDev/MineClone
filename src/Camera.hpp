@@ -1,9 +1,10 @@
 #pragma once
-#include <glm/vec3.hpp>
+
+#include "util/Vector.hpp"
 
 struct Camera {
-	glm::vec3 position;
-	glm::vec3 rotation;
+	Vec3 position;
+	Vec3 rotation;
 	float aspectRatio;
 };
 

@@ -1,9 +1,13 @@
 #include "Game.hpp"
 
-Game::Game() : 
-	m_window(sf::VideoMode(800, 600), "OpenBlocks", sf::Style::Default)
+Game::Game() 
 {
+	sf::ContextSettings settings;
+	settings.depthBits = 24;
+	settings.majorVersion = 3.3;
+	settings.minorVersion = 3.3;
 
+	m_window.create(sf::VideoMode(800, 600), "OpenBlocks", sf::Style::Default, settings);
 	glewInit();
 }
 

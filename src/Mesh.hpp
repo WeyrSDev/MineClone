@@ -13,10 +13,15 @@ struct VertexData {
 	glm::vec2 txtCoords;
 };
 
+struct MeshData {
+	std::vector<VertexData> vertex;
+	std::vector<GLuint> indices;
+};
+
 class Mesh {
 public:
 	Mesh();
-	Mesh(const std::vector<VertexData>& vertex, const std::vector<GLuint>& indices);
+	Mesh(const MeshData& data);
 	~Mesh();
 
 	Mesh(Mesh&& mesh);
@@ -26,7 +31,7 @@ public:
 	Mesh& operator=(Mesh& mesh) = delete;
 
 	void destroy();
-	void create(const std::vector<VertexData>& vertex, const std::vector<GLuint>& indices);
+	void create(const MeshData& data);
 	void bind() const { glBindVertexArray(m_VAO); };
 	GLuint getIndicesCount() const { return m_indicesCount; };
 private:

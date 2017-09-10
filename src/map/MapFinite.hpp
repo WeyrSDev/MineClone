@@ -10,6 +10,8 @@ public:
 	MapFinite(unsigned int size);
 	~MapFinite();
 
+	void update();
+
 	Block getBlock(int x, int y, int z) const;
 	void setBlock(int x, int y, int z, Block block);
 	void update(MasterRenderer& renderer);

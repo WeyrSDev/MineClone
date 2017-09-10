@@ -44,6 +44,25 @@ void ScenePlaying::update(float delta)
 		m_camera.rotation.x = -80;
 	if (m_camera.rotation.x > 80)
 		m_camera.rotation.x = 80;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	{
+		m_camera.position.z += delta * 4;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	{
+		m_camera.position.z -= delta * 4;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	{
+		m_camera.position.x -= delta * 4;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	{
+		m_camera.position.x += delta * 4;
+	}
+
+	m_map->update(m_renderer);
 }
 
 void ScenePlaying::render()

@@ -3,10 +3,9 @@
 #include <array>
 #include <memory>
 
-#include <SFML/Graphics.hpp>
-
 #include "Mesh.hpp"
 #include "map/Constants.hpp"
+#include "util/Vector.hpp"
 
 typedef unsigned int Block;
 
@@ -15,11 +14,13 @@ class MapBase;
 class ChunkSection
 {
 public:
-	ChunkSection(sf::Vector3i position, const MapBase* const map);
+	ChunkSection(Vec3 position, const MapBase* const map);
+
+	Vec3 toWorldPosition(int x, int y, int z) const;
 
 	void setBlock(int x, int y, int z, Block Block);
 	Block getBlock(int x, int y, int z) const;
-	const sf::Vector3i& getPosition() const { return m_position; };
+	const Vec3& getPosition() const { return m_position; };
 
 	void update();
 	void modify() { m_modified = true; };
@@ -29,10 +30,9 @@ public:
 
 private:
 	bool outOfBound(int x, int y, int z) const;
-	sf::Vector3i toWorldPosition(int x, int y, int z) const;
 
-	bool m_modified = false;
-	const sf::Vector3i m_position;
+	bool m_modified;
+	const Vec3 m_position;
 	std::array<Block, ChunkVolume> m_blocks;
 	Mesh m_mesh;
 	const MapBase* const m_map;
