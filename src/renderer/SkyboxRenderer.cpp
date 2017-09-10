@@ -13,7 +13,7 @@ SkyboxRenderer::SkyboxRenderer()
 	std::vector<GLuint> skyIndex;
 
 	//Front face
-	pushFace(skyVertex, skyIndex, 
+	MeshUtil::pushFace(skyVertex, skyIndex, 
 		glm::vec3(-1, 1, -1) * skyboxSize,
 		glm::vec3(2, 0, 0) * skyboxSize,
 		glm::vec3(0, -2, 0) * skyboxSize,
@@ -22,7 +22,7 @@ SkyboxRenderer::SkyboxRenderer()
 		1.f);
 
 	//Right face 
-	pushFace(skyVertex, skyIndex, 
+	MeshUtil::pushFace(skyVertex, skyIndex, 
 		glm::vec3(1, 1, -1) * skyboxSize,
 		glm::vec3(0, 0, 2) * skyboxSize,
 		glm::vec3(0, -2, 0) * skyboxSize,
@@ -30,7 +30,7 @@ SkyboxRenderer::SkyboxRenderer()
 		glm::vec2(xUnit, yUnit),
 		1.f);
 	//Back face 
-	pushFace(skyVertex, skyIndex, 
+	MeshUtil::pushFace(skyVertex, skyIndex, 
 		glm::vec3(1, 1, 1) * skyboxSize,
 		glm::vec3(-2, 0, 0) * skyboxSize,
 		glm::vec3(0, -2, 0) * skyboxSize,
@@ -38,7 +38,7 @@ SkyboxRenderer::SkyboxRenderer()
 		glm::vec2(xUnit, yUnit),
 		1.f);
 	//Left face 
-	pushFace(skyVertex, skyIndex, 
+	MeshUtil::pushFace(skyVertex, skyIndex, 
 		glm::vec3(-1, 1, 1) * skyboxSize,
 		glm::vec3(0, 0, -2) * skyboxSize,
 		glm::vec3(0, -2, 0) * skyboxSize,
@@ -46,7 +46,7 @@ SkyboxRenderer::SkyboxRenderer()
 		glm::vec2(xUnit, yUnit),
 		1.f);
 	//Top face 
-	pushFace(skyVertex, skyIndex, 
+	MeshUtil::pushFace(skyVertex, skyIndex, 
 		glm::vec3(-1, 1, 1) * skyboxSize,
 		glm::vec3(2, 0, 0) * skyboxSize,
 		glm::vec3(0, 0, -2) * skyboxSize,
@@ -54,7 +54,7 @@ SkyboxRenderer::SkyboxRenderer()
 		glm::vec2(xUnit, yUnit),
 		1.f);
 	//Bottom face 
-	pushFace(skyVertex, skyIndex, 
+	MeshUtil::pushFace(skyVertex, skyIndex, 
 		glm::vec3(-1, -1, -1) * skyboxSize,
 		glm::vec3(2, 0, 0) * skyboxSize,
 		glm::vec3(0, 0, 2) * skyboxSize,
@@ -65,15 +65,12 @@ SkyboxRenderer::SkyboxRenderer()
 	m_texture = TextureManager::get().getTexture("skybox.png");
 
 	m_skybox.create(skyVertex, skyIndex);
-	m_shader.create("basic_vertex.glsl", "basic_fragment.glsl");
 }
 
 void SkyboxRenderer::render(glm::mat4& transform)
 {
 	m_texture->bind();
 
-	m_shader.bind();
-	m_shader.setTransformMatrix(transform);
 
 	m_skybox.bind();
 

@@ -5,6 +5,9 @@
 
 #include "Camera.hpp"
 
-glm::mat4 getViewMatrix(const Camera& camera);
-glm::mat4 getProjectionMatrix(const Camera& camera);
-glm::mat4 getSkyboxViewMatrix(const Camera& camera);
+namespace MatrixUtil
+{
+	glm::mat4 getViewMatrix(const Camera& camera);
+	glm::mat4 getProjectionMatrix(const Camera& camera);
+	glm::mat4 getSkyboxViewMatrix(const Camera& camera);
+}

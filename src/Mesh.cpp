@@ -6,13 +6,43 @@ Mesh::Mesh():
 	m_VAO(0), m_VBO(0), m_EBO(0), m_indicesCount(0) 
 { }
 
-Mesh::Mesh(const std::vector<VertexData>& vertex, const std::vector<GLuint>& indices)
+Mesh::Mesh(const std::vector<VertexData>& vertex, const std::vector<GLuint>& indices):
+	m_VAO(0), m_VBO(0), m_EBO(0), m_indicesCount(0) 
 {
 	create(vertex, indices);
 }
 
+Mesh::~Mesh()
+{
+	destroy();
+}
+
+Mesh::Mesh(Mesh&& mesh)
+{
+	m_VBO = mesh.m_VBO;
+	m_VAO = mesh.m_VAO;
+	m_EBO = mesh.m_EBO;
+	m_indicesCount = mesh.m_indicesCount;
+
+	mesh.m_VBO = mesh.m_VAO = mesh.m_EBO = mesh.m_indicesCount = 0;
+}
+
+Mesh& Mesh::operator=(Mesh&& mesh)
+{
+	m_VBO = mesh.m_VBO;
+	m_VAO = mesh.m_VAO;
+	m_EBO = mesh.m_EBO;
+	m_indicesCount = mesh.m_indicesCount;
+
+	mesh.m_VBO = mesh.m_VAO = mesh.m_EBO = mesh.m_indicesCount = 0;
+	
+	return *this;
+}
+
 void Mesh::create(const std::vector<VertexData>& vertex, const std::vector<GLuint>& indices)
 {
+	destroy();
+
 	m_indicesCount = indices.size();
 
 	glGenVertexArrays(1, &m_VAO);
@@ -44,9 +74,14 @@ void Mesh::create(const std::vector<VertexData>& vertex, const std::vector<GLuin
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 }
 
-Mesh::~Mesh()
+void Mesh::destroy()
 {
-	glDeleteVertexArrays(1, &m_VAO);
-	glDeleteBuffers(1, &m_VBO);
-	glDeleteBuffers(1, &m_EBO);
+	if (m_VAO)
+		glDeleteVertexArrays(1, &m_VAO);
+	if (m_VBO)
+		glDeleteBuffers(1, &m_VBO);
+	if (m_EBO)
+		glDeleteBuffers(1, &m_EBO);
+
+	m_VAO = m_VBO = m_EBO = 0;
 }

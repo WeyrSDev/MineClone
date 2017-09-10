@@ -2,4 +2,7 @@
 
 #include<string>
 
-std::string getFileSrc(std::string sf);
+namespace FileUtil
+{
+	std::string getFileSrc(std::string sf);
+}

@@ -19,6 +19,10 @@ public:
 	Mesh(const std::vector<VertexData>& vertex, const std::vector<GLuint>& indices);
 	~Mesh();
 
+	Mesh(Mesh&& mesh);
+	Mesh& operator=(Mesh&& mesh);
+
+	void destroy();
 	void create(const std::vector<VertexData>& vertex, const std::vector<GLuint>& indices);
 	void bind() const { glBindVertexArray(m_VAO); };
 	GLuint getIndicesCount() const { return m_indicesCount; };

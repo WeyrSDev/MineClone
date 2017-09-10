@@ -15,8 +15,8 @@ Shader::Shader(const char* vertex, const char* fragment)
 
 void Shader::create(const char* vertex, const char* fragment)
 {
-	std::string vertexSrc = getFileSrc(std::string(shaderPath) + vertex);
-	std::string fragmentSrc = getFileSrc(std::string(shaderPath) + fragment);
+	std::string vertexSrc = FileUtil::getFileSrc(std::string(shaderPath) + vertex);
+	std::string fragmentSrc = FileUtil::getFileSrc(std::string(shaderPath) + fragment);
 
 	GLchar* vSrc = (GLchar*) vertexSrc.c_str();
 	GLchar* fSrc = (GLchar*) fragmentSrc.c_str();

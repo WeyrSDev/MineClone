@@ -1,9 +1,10 @@
 #pragma once
+#include"SceneBase.hpp"
 
 #include <GL/glew.h>
 
-#include"SceneBase.hpp"
 #include "renderer/MasterRenderer.hpp"
+#include "map/MapBase.hpp"
 
 class ScenePlaying : public SceneBase {
 public:
@@ -15,4 +16,7 @@ public:
 private:
 	MasterRenderer m_renderer;
 	Camera m_camera;
+
+	std::unique_ptr<MapBase> m_map;
+	bool m_pause;
 };

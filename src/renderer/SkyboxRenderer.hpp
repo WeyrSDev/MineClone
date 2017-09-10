@@ -15,7 +15,6 @@ public:
 	void render(glm::mat4& transform);
 private:
 	Mesh m_skybox;
-	Shader m_shader;
 
 	const Texture* m_texture;
 };
