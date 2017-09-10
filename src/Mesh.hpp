@@ -21,6 +21,9 @@ public:
 
 	Mesh(Mesh&& mesh);
 	Mesh& operator=(Mesh&& mesh);
+	
+	Mesh(Mesh& mesh) = delete;
+	Mesh& operator=(Mesh& mesh) = delete;
 
 	void destroy();
 	void create(const std::vector<VertexData>& vertex, const std::vector<GLuint>& indices);
