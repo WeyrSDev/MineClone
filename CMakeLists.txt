@@ -3,7 +3,7 @@ project(MineClone)
 
 include_directories(src)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 file (GLOB_RECURSE SRC src/*.cpp)
 

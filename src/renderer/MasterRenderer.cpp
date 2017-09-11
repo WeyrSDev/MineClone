@@ -8,6 +8,8 @@ MasterRenderer::MasterRenderer()
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
 
+	glEnable(GL_CULL_FACE);
+
 	m_shader.create("basic_vertex.glsl", "basic_fragment.glsl");
 
 	m_skybox = std::make_unique<SkyboxRenderer>();
@@ -28,7 +30,6 @@ void MasterRenderer::render(const Camera& camera)
 
 	glm::mat4 matSkybox = projectionMatrix * MatrixUtil::getSkyboxViewMatrix(camera);
 
-	//glEnable(GL_CULL_FACE);
 
 	m_shader.bind();
 

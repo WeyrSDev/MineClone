@@ -3,16 +3,20 @@
 #include "Game.hpp"
 #include "map/MapFinite.hpp"
 
+Vec3 velocity;
+
 ScenePlaying::ScenePlaying(const Game& game) :
-	SceneBase(game), m_camera({{0, 0, 0}, {0, 0, 0}, 0}),
-	m_pause(0)
+	SceneBase(game), m_camera({{256, 258, 256}, {0, 0, 0}, 0}),
+	m_pause(0) 
 {
 	int centerX = m_game->getWindow().getSize().x / 2;
 	int centerY = m_game->getWindow().getSize().y / 2;
 	
 	sf::Mouse::setPosition(sf::Vector2i(centerX, centerY), m_game->getWindow());
 
-	m_map = std::make_unique<MapFinite>(8);
+	m_map = std::make_unique<MapFinite>(16);
+
+	velocity = Vec3();
 }
 
 void ScenePlaying::update(float delta)
@@ -45,22 +49,37 @@ void ScenePlaying::update(float delta)
 	if (m_camera.rotation.x > 80)
 		m_camera.rotation.x = 80;
 
+	float angle = m_camera.rotation.y;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
-		m_camera.position.z += delta * 4;
+		velocity.x -= glm::cos(glm::radians(angle + 90)) * delta;
+		velocity.z -= glm::sin(glm::radians(angle + 90)) * delta;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
-		m_camera.position.z -= delta * 4;
+		velocity.x += glm::cos(glm::radians(angle + 90)) * delta;
+		velocity.z += glm::sin(glm::radians(angle + 90)) * delta;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		m_camera.position.x -= delta * 4;
+		velocity.x -= glm::cos(glm::radians(angle)) * delta;
+		velocity.z -= glm::sin(glm::radians(angle)) * delta;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		m_camera.position.x += delta * 4;
+		velocity.x += glm::cos(glm::radians(angle)) * delta;
+		velocity.z += glm::sin(glm::radians(angle)) * delta;
 	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		velocity.y += delta;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+	{
+		velocity.y -= delta;
+	}
+	m_camera.position = m_camera.position + velocity;
+	velocity = velocity * 0.95f;
 
 	m_map->update(m_renderer);
 }

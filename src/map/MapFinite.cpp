@@ -13,7 +13,6 @@ MapFinite::MapFinite(unsigned int size) :
 	}
 }
 
-
 MapFinite::~MapFinite()
 {
 

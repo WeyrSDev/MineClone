@@ -1,7 +1,9 @@
 #include "Game.hpp"
+#include "map/data/Block.hpp"
 
 Game::Game() 
 {
+	printf("%d\n", sizeof(Block));
 	sf::ContextSettings settings;
 	settings.depthBits = 24;
 	settings.majorVersion = 3.3;

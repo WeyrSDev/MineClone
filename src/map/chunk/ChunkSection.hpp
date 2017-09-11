@@ -3,13 +3,13 @@
 #include <array>
 #include <memory>
 
+#include "map/data/Block.hpp"
 #include "Mesh.hpp"
 #include "map/Constants.hpp"
 #include "util/Vector.hpp"
 
-typedef unsigned int Block;
-
 class MapBase;
+class ChunkBuilder;
 
 class ChunkSection
 {
@@ -24,6 +24,7 @@ public:
 
 	void update();
 	void modify() { m_modified = true; };
+	void regenerateMeshData();
 
 
 	const Mesh* getMesh() const { return &m_mesh; };
@@ -35,5 +36,7 @@ private:
 	const Vec3 m_position;
 	std::array<Block, ChunkVolume> m_blocks;
 	Mesh m_mesh;
+	MeshData m_solidMeshData;
+	bool m_modifyMesh;
 	const MapBase* const m_map;
 };

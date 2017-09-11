@@ -9,7 +9,7 @@ int getIndex(int x, int y, int z)
 }
 
 ChunkSection::ChunkSection(Vec3 position, const MapBase* const map):
-	m_position(position), m_map(map), m_modified(true)
+	m_position(position), m_map(map), m_modified(true), m_modifyMesh(false)
 {
 	for (auto& block : m_blocks)
 	{
@@ -46,13 +46,24 @@ Block ChunkSection::getBlock(int x, int y, int z) const
 
 void ChunkSection::update()
 {
-
 	if (m_modified)
 	{
-		ChunkBuilder cb(*this);
-		m_mesh = cb.generateMesh();
-		m_modified = false;
+		regenerateMeshData();
 	}
+
+	if (m_modifyMesh)
+	{
+		m_mesh = Mesh(m_solidMeshData);
+
+		m_modifyMesh = false;
+	}
+}
+
+void ChunkSection::regenerateMeshData()
+{
+	m_solidMeshData = ChunkBuilder(*this).getData();
+	m_modifyMesh = true;
+	m_modified = false;
 }
 
 Vec3 ChunkSection::toWorldPosition(int x, int y, int z) const

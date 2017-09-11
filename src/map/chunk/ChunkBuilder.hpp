@@ -8,7 +8,7 @@ class ChunkBuilder
 public:
 	ChunkBuilder(const ChunkSection& chunkSection);
 
-	Mesh generateMesh();
+	MeshData getData();
 private:
 	void pushSolidBlock(int x, int y, int z);
 	void pushFace(Vec3 start, Vec3 right, Vec3 down, float light, Vec2 texture);

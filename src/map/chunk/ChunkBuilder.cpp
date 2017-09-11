@@ -1,6 +1,7 @@
 #include "ChunkBuilder.hpp"
 #include "ChunkSection.hpp"
 #include "util/MeshUtil.hpp"
+#include "map/data/BlockDataBase.hpp"
 
 ChunkBuilder::ChunkBuilder(const ChunkSection& chunkSection):
 	m_chunk(chunkSection), m_currentMesh(m_solidMesh)
@@ -13,7 +14,7 @@ ChunkBuilder::ChunkBuilder(const ChunkSection& chunkSection):
 			{
 				currentBlock = m_chunk.getBlock(x, y, z);
 
-				if (!currentBlock)
+				if (currentBlock == (BlockId)BlocksIds::air)
 					continue;
 				pushSolidBlock(x, y, z);
 			}
@@ -21,44 +22,45 @@ ChunkBuilder::ChunkBuilder(const ChunkSection& chunkSection):
 	}
 }
 
-Mesh ChunkBuilder::generateMesh()
+MeshData ChunkBuilder::getData()
 {
-	return Mesh(m_solidMesh);
+	return m_solidMesh;
 }
 
 void ChunkBuilder::pushSolidBlock(int x, int y, int z)
 {
 	m_currentMesh = m_solidMesh;
+	auto data = currentBlock.getData();
 
 	//Front face
 	if (isVisible(x, y, z + 1))
 	{
-		pushFace(Vec3(x, y + 1, z + 1), Vec3(1, 0, 0), Vec3(0, -1, 0), 0.8, Vec2(currentBlock, 0));
+		pushFace(Vec3(x, y + 1, z + 1), Vec3(1, 0, 0), Vec3(0, -1, 0), 0.8, data.texFront);
 	}
 	//Back face
 	if (isVisible(x, y, z - 1))
 	{
-		pushFace(Vec3(x + 1, y + 1, z), Vec3(-1, 0, 0), Vec3(0, -1, 0), 0.8, Vec2(currentBlock, 0));
+		pushFace(Vec3(x + 1, y + 1, z), Vec3(-1, 0, 0), Vec3(0, -1, 0), 0.8, data.texBack);
 	}
 	//Left face
 	if (isVisible(x - 1, y, z))
 	{
-		pushFace(Vec3(x, y + 1, z), Vec3(0, 0, 1), Vec3(0, -1, 0), 0.6, Vec2(currentBlock, 0));
+		pushFace(Vec3(x, y + 1, z), Vec3(0, 0, 1), Vec3(0, -1, 0), 0.6, data.texLeft);
 	}
 	//Right face
 	if (isVisible(x + 1, y, z))
 	{
-		pushFace(Vec3(x + 1, y + 1, z + 1), Vec3(0, 0, -1), Vec3(0, -1, 0), 0.6, Vec2(currentBlock, 0));
+		pushFace(Vec3(x + 1, y + 1, z + 1), Vec3(0, 0, -1), Vec3(0, -1, 0), 0.6, data.texRight);
 	}
 	//Top face
 	if (isVisible(x, y + 1, z))
 	{
-		pushFace(Vec3(x, y + 1, z), Vec3(1, 0, 0), Vec3(0, 0, 1), 1, Vec2(currentBlock, 0));
+		pushFace(Vec3(x, y + 1, z), Vec3(1, 0, 0), Vec3(0, 0, 1), 1, data.texTop);
 	}
 	//Bottom face
 	if (isVisible(x, y - 1, z))
 	{
-		pushFace(Vec3(x, y, z), Vec3(1, 0, 0), Vec3(0, 0, 1), 0.4, Vec2(currentBlock, 0));
+		pushFace(Vec3(x + 1, y, z), Vec3(-1, 0, 0), Vec3(0, 0, 1), 0.4, data.texBottom);
 	}
 }
 
@@ -71,7 +73,7 @@ void ChunkBuilder::pushFace(Vec3 start, Vec3 right, Vec3 down, float light, Vec2
 bool ChunkBuilder::isVisible(int x, int y, int z)
 {
 	Block sideBlock = m_chunk.getBlock(x, y, z);
-	if (sideBlock == 0)
+	if (sideBlock == (BlockId) BlocksIds::air)
 	{
 		return true;
 	}

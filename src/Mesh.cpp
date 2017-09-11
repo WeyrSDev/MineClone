@@ -43,6 +43,11 @@ void Mesh::create(const MeshData& data)
 {
 	destroy();
 
+	if (data.vertex.size() == 0 || data.indices.size() == 0)
+	{
+		return;
+	}
+
 	m_indicesCount = data.indices.size();
 
 	glGenVertexArrays(1, &m_VAO);
