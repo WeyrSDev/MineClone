@@ -14,6 +14,7 @@ public:
 	void render();
 	void keyDown(sf::Event::KeyEvent key);
 private:
+	void updatePlaying(float delta);
 	MasterRenderer m_renderer;
 	Camera m_camera;
 

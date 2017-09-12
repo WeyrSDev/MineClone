@@ -15,6 +15,8 @@ public:
 	void setBlock(int x, int y, int z, Block block);
 	
 	void update(MasterRenderer& renderer);
+
+	ChunkSection& getSection(unsigned int i);
 private:
 	bool outOfBound(int x, int y, int z) const;
 

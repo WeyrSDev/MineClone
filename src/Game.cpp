@@ -3,13 +3,12 @@
 
 Game::Game() 
 {
-	printf("%d\n", sizeof(Block));
 	sf::ContextSettings settings;
 	settings.depthBits = 24;
 	settings.majorVersion = 3.3;
 	settings.minorVersion = 3.3;
 
-	m_window.create(sf::VideoMode(800, 600), "OpenBlocks", sf::Style::Default, settings);
+	m_window.create(sf::VideoMode(800, 600), "MineClone", sf::Style::Default, settings);
 	glewInit();
 }
 

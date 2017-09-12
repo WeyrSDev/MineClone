@@ -9,11 +9,11 @@ int getIndex(int x, int y, int z)
 }
 
 ChunkSection::ChunkSection(Vec3 position, const MapBase* const map):
-	m_position(position), m_map(map), m_modified(true), m_modifyMesh(false)
+	m_position(position), m_map(map), m_modified(false), m_modifyMesh(false)
 {
 	for (auto& block : m_blocks)
 	{
-		block = 1;
+		block = 0;
 	}
 }
 
@@ -27,6 +27,7 @@ void ChunkSection::setBlock(int x, int y, int z, Block block)
 	int sz = z % ChunkLength;
 
 	m_blocks[getIndex(x, y, z)] = block;
+	m_modified = true;
 }
 
 Block ChunkSection::getBlock(int x, int y, int z) const

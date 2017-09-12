@@ -7,5 +7,5 @@ constexpr int ChunkLength = 16;
 constexpr int ChunkArea = ChunkLength * ChunkLength;
 constexpr int ChunkVolume = ChunkArea * ChunkLength;
 
-constexpr unsigned int ChunkHeight = 16;
-constexpr unsigned int BlockHeight = ChunkHeight * ChunkLength;
+constexpr int ChunkHeight = 16;
+constexpr int BlockHeight = ChunkHeight * ChunkLength;

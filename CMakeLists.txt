@@ -5,6 +5,8 @@ include_directories(src)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -g")
+
 file (GLOB_RECURSE SRC src/*.cpp)
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -14,6 +16,5 @@ if (CMAKE_SYSTEM_NAME    MATCHES "Linux")
         link_libraries(GL GLEW)
 endif()
 link_libraries(sfml-system sfml-window sfml-graphics)
-
 
 add_executable(MineClone ${SRC})

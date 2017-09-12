@@ -6,7 +6,7 @@
 Vec3 velocity;
 
 ScenePlaying::ScenePlaying(const Game& game) :
-	SceneBase(game), m_camera({{256, 258, 256}, {0, 0, 0}, 0}),
+	SceneBase(game), m_camera({{256, 82, 256}, {0, 0, 0}, 0}),
 	m_pause(0) 
 {
 	int centerX = m_game->getWindow().getSize().x / 2;
@@ -14,7 +14,7 @@ ScenePlaying::ScenePlaying(const Game& game) :
 	
 	sf::Mouse::setPosition(sf::Vector2i(centerX, centerY), m_game->getWindow());
 
-	m_map = std::make_unique<MapFinite>(16);
+	m_map = std::make_unique<MapFinite>(32);
 
 	velocity = Vec3();
 }
@@ -23,11 +23,17 @@ void ScenePlaying::update(float delta)
 {
 	m_camera.aspectRatio = float(m_game->getWindow().getSize().x) / m_game->getWindow().getSize().y;
 
-	if (m_pause)
+	if (!m_pause)
 	{
-		return;
+		updatePlaying(delta);
 	}
 
+
+	m_map->update(m_renderer);
+}
+
+void ScenePlaying::updatePlaying(float delta)
+{
 	int centerX = m_game->getWindow().getSize().x / 2;
 	int centerY = m_game->getWindow().getSize().y / 2;
 
@@ -54,11 +60,13 @@ void ScenePlaying::update(float delta)
 	{
 		velocity.x -= glm::cos(glm::radians(angle + 90)) * delta;
 		velocity.z -= glm::sin(glm::radians(angle + 90)) * delta;
+		velocity.y -= glm::tan(glm::radians(m_camera.rotation.x)) * delta;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
 		velocity.x += glm::cos(glm::radians(angle + 90)) * delta;
 		velocity.z += glm::sin(glm::radians(angle + 90)) * delta;
+		velocity.y += glm::tan(glm::radians(m_camera.rotation.x)) * delta;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
@@ -80,8 +88,6 @@ void ScenePlaying::update(float delta)
 	}
 	m_camera.position = m_camera.position + velocity;
 	velocity = velocity * 0.95f;
-
-	m_map->update(m_renderer);
 }
 
 void ScenePlaying::render()

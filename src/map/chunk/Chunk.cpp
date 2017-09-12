@@ -3,6 +3,7 @@
 #include "renderer/MasterRenderer.hpp"
 #include "Chunk.hpp"
 #include "map/MapBase.hpp"
+#include "map/data/BlockDataBase.hpp"
 
 Chunk::Chunk(Vec2 position, const MapBase* const map) :
 	m_position(position), m_map(map)
@@ -21,9 +22,9 @@ void Chunk::setBlock(int x, int y, int z, Block block)
 		return;
 	}
 
-	int sz = z % ChunkLength;
+	int sy = y % ChunkLength;
 
-	m_sections[z / ChunkLength].setBlock(x, y, sz, block);
+	m_sections[y / ChunkLength].setBlock(x, sy, z, block);
 }
 
 Block Chunk::getBlock(int x, int y, int z) const
@@ -38,10 +39,9 @@ Block Chunk::getBlock(int x, int y, int z) const
 
 		return m_map->getBlock(x, y, z);
 	}
-
 	int sy = y % ChunkLength;
 
-	return m_sections[z / ChunkLength].getBlock(x, sy, z);
+	return m_sections[y / ChunkLength].getBlock(x, sy, z);
 }
 
 void Chunk::update(MasterRenderer& renderer)
@@ -54,6 +54,11 @@ void Chunk::update(MasterRenderer& renderer)
 			renderer.addChunk(section);
 		}
 	}
+}
+
+ChunkSection& Chunk::getSection(unsigned int i)
+{
+	return m_sections[i % ChunkHeight];
 }
 
 Vec3 Chunk::toWorldPosition(int x, int y, int z) const
