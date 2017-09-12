@@ -1,5 +1,12 @@
 #include "Noise.hpp"
 
+double Noise::noise(int x, int y, int unit, double frequency)
+{
+	double convertedX = frequency * (double) x / (double) unit;
+	double convertedY = frequency * (double) y / (double) unit;
+
+	return noise(convertedX, convertedY);
+}
 double Noise::noise(double x, double y)
 {
 	int left = (int) x;

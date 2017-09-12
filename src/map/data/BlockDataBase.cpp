@@ -17,7 +17,11 @@ const BlockData& BlockDataBase::getBlockData(BlockId id) const {
 BlockDataBase::BlockDataBase()
 {
 	m_blocks[static_cast<BlockId>(BlocksIds::air)] = std::make_unique<BlockData>(Vec2(0, 0), Vec2(0, 0), Vec2(0, 0));
+
 	m_blocks[static_cast<BlockId>(BlocksIds::grass)] = std::make_unique<BlockData>(Vec2(0, 0), Vec2(2, 0), Vec2(1, 0));
 	m_blocks[static_cast<BlockId>(BlocksIds::dirt)] = std::make_unique<BlockData>(Vec2(2, 0), Vec2(2, 0), Vec2(2, 0));
 	m_blocks[static_cast<BlockId>(BlocksIds::stone)] = std::make_unique<BlockData>(Vec2(12, 0), Vec2(12, 0), Vec2(12, 0));
+	m_blocks[static_cast<BlockId>(BlocksIds::sand)] = std::make_unique<BlockData>(Vec2(5, 0), Vec2(5, 0), Vec2(5, 0));
+
+	m_blocks[static_cast<BlockId>(BlocksIds::water)] = std::make_unique<BlockData>(Vec2(7, 0), Vec2(7, 0), Vec2(7, 0));
 }

@@ -1,5 +1,8 @@
 #include "ScenePlaying.hpp"
 
+#include <stdlib.h>
+#include <time.h>
+
 #include "Game.hpp"
 #include "map/MapFinite.hpp"
 
@@ -9,12 +12,14 @@ ScenePlaying::ScenePlaying(const Game& game) :
 	SceneBase(game), m_camera({{256, 82, 256}, {0, 0, 0}, 0}),
 	m_pause(0) 
 {
+	srand(time(NULL));
+
 	int centerX = m_game->getWindow().getSize().x / 2;
 	int centerY = m_game->getWindow().getSize().y / 2;
 	
 	sf::Mouse::setPosition(sf::Vector2i(centerX, centerY), m_game->getWindow());
 
-	m_map = std::make_unique<MapFinite>(32);
+	m_map = std::make_unique<MapFinite>(32, rand());
 
 	velocity = Vec3();
 }

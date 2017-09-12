@@ -4,10 +4,11 @@
 #include <memory>
 
 #include "MapBase.hpp"
+#include "generator/WorldGenerator.hpp"
 
 class MapFinite : public MapBase {
 public:
-	MapFinite(unsigned int size);
+	MapFinite(unsigned int size, unsigned int seed);
 	~MapFinite();
 
 	void update();
@@ -21,4 +22,6 @@ private:
 	const unsigned int m_chunkSize, m_blockSize;
 
 	std::vector<Chunk> m_chunks;
+
+	WorldGenerator generator;
 };

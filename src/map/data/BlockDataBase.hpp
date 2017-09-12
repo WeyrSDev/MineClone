@@ -11,7 +11,8 @@ enum class BlocksIds : BlockId {
 	grass,
 	dirt,
 	stone,
-
+	water,
+	sand,
 
 	count
 };

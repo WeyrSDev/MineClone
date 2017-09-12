@@ -17,6 +17,7 @@ public:
 	void update(MasterRenderer& renderer);
 
 	ChunkSection& getSection(unsigned int i);
+	Vec2 getPosition() { return m_position; };
 private:
 	bool outOfBound(int x, int y, int z) const;
 

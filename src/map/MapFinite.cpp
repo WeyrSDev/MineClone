@@ -1,17 +1,11 @@
 #include "MapFinite.hpp"
 
-#include <stdlib.h>
-#include <time.h>
-
 #include "util/Noise.hpp"
-#include "data/BlockDataBase.hpp"
 
-MapFinite::MapFinite(unsigned int size) :
-	m_chunkSize(size), m_blockSize(size * ChunkLength)
+MapFinite::MapFinite(unsigned int size, unsigned int seed) :
+	m_chunkSize(size), m_blockSize(size * ChunkLength),
+	generator(seed)
 {
-	srand(time(NULL));
-
-	unsigned int seed = rand();
 	Noise noise(seed);
 
 	printf("Creating world\n");
@@ -21,41 +15,21 @@ MapFinite::MapFinite(unsigned int size) :
 		for (int e = 0; e < m_chunkSize; e++)
 		{
 			m_chunks.push_back(Chunk(Vec2(e, i), this));
-			auto& chunk = m_chunks.back();
+			generator.generateChunk(m_chunks.back());
 
-			for (int x = 0; x < ChunkLength; x++)
-			{
-				for (int z = 0; z < ChunkLength; z++)
-				{
-					double tx = ((double) x / ChunkLength) + e;
-					double tz = ((double) z / ChunkLength) + i;
-					tx /= 8.f; tz /= 8.f;
-
-					int h = 40 + 40 * noise.noise(tx, tz);
-					for (int y = 0; y <= h; y++)
-					{
-						Block block = static_cast<BlockId>(BlocksIds::stone);
-						if (y == h)
-							block = static_cast<BlockId>(BlocksIds::grass);
-						else if (y > h - 5)
-							block = static_cast<BlockId>(BlocksIds::dirt);
-
-						chunk.setBlock(x, y, z, block);
-					}
-				}
-			}
 		}
 	}
-	printf("World created in %f seconds\n", clock.getElapsedTime().asSeconds());
-	printf("Generating chunk mesh data\n");
+	printf("World created in %f seconds\n\n", clock.getElapsedTime().asSeconds());
+	
+	printf("Generating chunk mesh data\n\n");
 	clock.restart();
-	for (int i = 0; i < m_chunkSize; i++)
+	for (int z = 0; z < m_chunkSize; z++)
 	{
-		for (int e = 0; e < m_chunkSize; e++)
+		for (int x = 0; x < m_chunkSize; x++)
 		{
 			for (int y = 0; y < ChunkHeight; y++)
 			{
-				auto& chunk = m_chunks[i * m_chunkSize + e].getSection(y);
+				auto& chunk = m_chunks[z * m_chunkSize + x].getSection(y);
 				chunk.regenerateMeshData();
 			}
 		}
