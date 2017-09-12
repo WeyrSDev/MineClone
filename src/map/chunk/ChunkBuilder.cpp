@@ -4,7 +4,7 @@
 #include "map/data/BlockDataBase.hpp"
 
 ChunkBuilder::ChunkBuilder(const ChunkSection& chunkSection):
-	m_chunk(chunkSection), m_currentMesh(m_solidMesh)
+	m_chunk(chunkSection), m_currentMesh(&m_solidMesh)
 {
 	for(int y = 0; y < ChunkLength; y++)
 	{
@@ -16,21 +16,31 @@ ChunkBuilder::ChunkBuilder(const ChunkSection& chunkSection):
 
 				if (currentBlock == (BlockId)BlocksIds::air)
 					continue;
-				pushSolidBlock(x, y, z);
+				pushBlock(x, y, z);
 			}
 		}
 	}
 }
 
-MeshData ChunkBuilder::getData()
+MeshData ChunkBuilder::getSolidData()
 {
 	return m_solidMesh;
 }
 
-void ChunkBuilder::pushSolidBlock(int x, int y, int z)
+MeshData ChunkBuilder::getLiquidData()
 {
-	m_currentMesh = m_solidMesh;
+	return m_liquidMesh;
+}
+
+void ChunkBuilder::pushBlock(int x, int y, int z)
+{
 	auto data = currentBlock.getData();
+
+	m_currentMesh = &m_solidMesh;
+	if (currentBlock == (BlockId) BlocksIds::water)
+	{
+		m_currentMesh = &m_liquidMesh;
+	}
 
 	//Front face
 	if (isVisible(x, y, z + 1))
@@ -67,15 +77,25 @@ void ChunkBuilder::pushSolidBlock(int x, int y, int z)
 void ChunkBuilder::pushFace(Vec3 start, Vec3 right, Vec3 down, float light, Vec2 texture)
 {
 	start = m_chunk.toWorldPosition(start.x, start.y, start.z);
-	MeshUtil::pushFace(m_currentMesh, start, right, down, texture * AtlasUnit, Vec2(AtlasUnit, AtlasUnit), light);
+	MeshUtil::pushFace(*m_currentMesh, start, right, down, texture * AtlasUnit, Vec2(AtlasUnit, AtlasUnit), light);
 }
 
 bool ChunkBuilder::isVisible(int x, int y, int z)
 {
 	Block sideBlock = m_chunk.getBlock(x, y, z);
-	if (sideBlock == (BlockId) BlocksIds::air)
+	if (currentBlock == (BlockId) BlocksIds::water)
+	{
+		if(sideBlock != (BlockId) BlocksIds::air)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	if (sideBlock == (BlockId) BlocksIds::air || sideBlock == (BlockId) BlocksIds::water)
 	{
 		return true;
 	}
+
 	return false;
 }

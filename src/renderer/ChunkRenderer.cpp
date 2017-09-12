@@ -7,23 +7,43 @@ ChunkRenderer::ChunkRenderer()
 
 void ChunkRenderer::addChunk(const ChunkSection& chunk)
 {
-	m_visibleChunks.push_back(&chunk);
+	auto& meshes = chunk.getMeshes();
 
+	if (meshes.liquid.getIndicesCount() > 0)
+	{
+		m_liquidMeshes.push_back(&meshes.liquid);
+	}
+
+	if (meshes.solid.getIndicesCount() > 0)
+	{
+		m_solidMeshes.push_back(&meshes.solid);
+	}
 }
 
-void ChunkRenderer::render()
+void ChunkRenderer::renderSolid()
 {
 	m_texture->bind();
-	for (auto chunk : m_visibleChunks)
+	for (auto mesh : m_solidMeshes)
 	{
-		const Mesh* mesh = chunk->getMesh();
-
 		mesh->bind();
 
 		glDrawElements(GL_TRIANGLES, mesh->getIndicesCount(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
-
-
 	}
-	m_visibleChunks.clear();
+	m_solidMeshes.clear();
+}
+void ChunkRenderer::renderLiquid()
+{
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	for (auto mesh : m_liquidMeshes)
+	{
+		mesh->bind();
+
+		glDrawElements(GL_TRIANGLES, mesh->getIndicesCount(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
+	m_liquidMeshes.clear();
+	glDisable(GL_BLEND);
+	glEnable(GL_CULL_FACE);
 }

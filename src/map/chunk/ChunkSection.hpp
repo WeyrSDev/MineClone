@@ -11,6 +11,11 @@
 class MapBase;
 class ChunkBuilder;
 
+struct ChunkMeshes {
+	Mesh solid, liquid;
+	MeshData solidData, liquidData;
+};
+
 class ChunkSection
 {
 public:
@@ -27,7 +32,7 @@ public:
 	void regenerateMeshData();
 
 
-	const Mesh* getMesh() const { return &m_mesh; };
+	const ChunkMeshes& getMeshes() const { return m_meshes; };
 
 private:
 	bool outOfBound(int x, int y, int z) const;
@@ -35,8 +40,9 @@ private:
 	bool m_modified;
 	const Vec3 m_position;
 	std::array<Block, ChunkVolume> m_blocks;
-	Mesh m_mesh;
-	MeshData m_solidMeshData;
-	bool m_modifyMesh;
+	
+	ChunkMeshes m_meshes;
+	bool m_modifyMeshes;
+
 	const MapBase* const m_map;
 };

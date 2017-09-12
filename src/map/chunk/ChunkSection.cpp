@@ -9,7 +9,7 @@ int getIndex(int x, int y, int z)
 }
 
 ChunkSection::ChunkSection(Vec3 position, const MapBase* const map):
-	m_position(position), m_map(map), m_modified(false), m_modifyMesh(false)
+	m_position(position), m_map(map), m_modified(false), m_modifyMeshes(false)
 {
 	for (auto& block : m_blocks)
 	{
@@ -52,18 +52,22 @@ void ChunkSection::update()
 		regenerateMeshData();
 	}
 
-	if (m_modifyMesh)
+	if (m_modifyMeshes)
 	{
-		m_mesh = Mesh(m_solidMeshData);
+		m_meshes.solid = Mesh(m_meshes.solidData);
+		m_meshes.liquid = Mesh(m_meshes.liquidData);
 
-		m_modifyMesh = false;
+		m_modifyMeshes = false;
 	}
 }
 
 void ChunkSection::regenerateMeshData()
 {
-	m_solidMeshData = ChunkBuilder(*this).getData();
-	m_modifyMesh = true;
+	ChunkBuilder builder(*this);
+
+	m_meshes.solidData = builder.getSolidData();
+	m_meshes.liquidData = builder.getLiquidData();
+	m_modifyMeshes = true;
 	m_modified = false;
 }
 

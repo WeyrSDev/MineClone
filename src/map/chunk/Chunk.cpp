@@ -49,10 +49,7 @@ void Chunk::update(MasterRenderer& renderer)
 	for (auto& section : m_sections)
 	{
 		section.update();
-		if (section.getMesh()->getIndicesCount() > 0)
-		{
-			renderer.addChunk(section);
-		}
+		renderer.addChunk(section);
 	}
 }
 

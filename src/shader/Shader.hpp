@@ -11,9 +11,10 @@ public:
 	virtual ~Shader();
 	
 	void setTransformMatrix(glm::mat4 matrix);
+	void setAlpha(float alpha);
 	void create(const char* vertex, const char* fragment);
 	void bind();
 private:
 	GLuint m_program;
-	GLuint m_transformMatrix;
+	GLuint m_transformMatrix, m_alpha;
 };

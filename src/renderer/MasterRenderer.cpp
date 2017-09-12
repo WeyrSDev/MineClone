@@ -7,8 +7,7 @@ MasterRenderer::MasterRenderer()
 
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
-
-	glEnable(GL_CULL_FACE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	m_shader.create("basic_vertex.glsl", "basic_fragment.glsl");
 
@@ -30,12 +29,17 @@ void MasterRenderer::render(const Camera& camera)
 
 	glm::mat4 matSkybox = projectionMatrix * MatrixUtil::getSkyboxViewMatrix(camera);
 
+	glEnable(GL_CULL_FACE);
 
 	m_shader.bind();
+	m_shader.setAlpha(1);
 
 	m_shader.setTransformMatrix(matSkybox);
 	m_skybox->render(matSkybox);
 
 	m_shader.setTransformMatrix(projViewMatrix);
-	m_chunk->render();
+	m_chunk->renderSolid();
+
+	m_shader.setAlpha(0.5);
+	m_chunk->renderLiquid();
 }

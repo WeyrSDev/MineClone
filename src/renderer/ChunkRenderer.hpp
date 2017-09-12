@@ -9,8 +9,9 @@ public:
 	ChunkRenderer();
 	void addChunk(const ChunkSection& chunk);
 
-	void render();
+	void renderSolid();
+	void renderLiquid();
 private:
-	std::vector<const ChunkSection*> m_visibleChunks;
+	std::vector<const Mesh*> m_solidMeshes, m_liquidMeshes;
 	const Texture* m_texture;
 };
