@@ -1,5 +1,6 @@
 #pragma once
 
+#include "HeightMapGenerator.hpp"
 #include "map/chunk/Chunk.hpp"
 #include "util/Noise.hpp"
 
@@ -9,5 +10,5 @@ public:
 
 	void generateChunk(Chunk& chunk);
 private:
-	Noise m_heightMapNoise;
+	HeightMapGenerator m_heightMap;
 };

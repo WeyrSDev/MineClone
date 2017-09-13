@@ -17,9 +17,9 @@ MapInfinite::MapInfinite(unsigned int seed, const Camera& camera):
 	m_generator(seed), m_quit(false),
 	m_renderDistance(16), m_camera(camera)
 {
-	for (int z = -5; z < 5; z++)
+	for (int z = -2; z < 3; z++)
 	{
-		for (int x = -5; x < 5; x++)
+		for (int x = -2; x < 3; x++)
 		{
 			createChunk(x, z);
 		}
@@ -76,24 +76,38 @@ void MapInfinite::loadThread()
 
 		for (int i = 0; i <= m_renderDistance; i++)
 		{
+			int sleepFor = 1;
+			if (i > 3)
+			{
+				sleepFor = 3;
+			}
+			if (i > 5)
+			{
+				sleepFor = 4;
+			}
+			if (i > 9)
+			{
+				sleepFor = 5;
+			}
+
 			int left = camPos.x - i;
 			int right = camPos.x + i;
 			int top = camPos.z - i;
 			int bottom = camPos.z + i;
 			
-			auto newCamPos = getChunkPosition(m_camera.position.x, m_camera.position.z);
-			if (newCamPos.x != camPos.x || newCamPos.z != camPos.z)
-				break;
 
 
 			for (int z = top; z <= bottom; z++)
 			{
-				std::this_thread::sleep_for(std::chrono::milliseconds(1));
+				auto newCamPos = getChunkPosition(m_camera.position.x, m_camera.position.z);
+				if (newCamPos.x != camPos.x || newCamPos.z != camPos.z)
+					break;
+				std::this_thread::sleep_for(std::chrono::milliseconds(sleepFor));
 				m_mutex.lock();
 				createChunk(left, z);					
 				m_mutex.unlock();
 
-				std::this_thread::sleep_for(std::chrono::milliseconds(1));
+				std::this_thread::sleep_for(std::chrono::milliseconds(sleepFor));
 				m_mutex.lock();
 				createChunk(right, z);					
 				m_mutex.unlock();
@@ -101,16 +115,22 @@ void MapInfinite::loadThread()
 
 			for (int x = left; x <= right; x++)
 			{
-				std::this_thread::sleep_for(std::chrono::milliseconds(1));
+				auto newCamPos = getChunkPosition(m_camera.position.x, m_camera.position.z);
+				if (newCamPos.x != camPos.x || newCamPos.z != camPos.z)
+					break;
+				std::this_thread::sleep_for(std::chrono::milliseconds(sleepFor));
 				m_mutex.lock();
 				createChunk(x, top);					
 				m_mutex.unlock();
 
-				std::this_thread::sleep_for(std::chrono::milliseconds(1));
+				std::this_thread::sleep_for(std::chrono::milliseconds(sleepFor));
 				m_mutex.lock();
 				createChunk(x, bottom);					
 				m_mutex.unlock();
 			}
+			auto newCamPos = getChunkPosition(m_camera.position.x, m_camera.position.z);
+			if (newCamPos.x != camPos.x || newCamPos.z != camPos.z)
+				break;
 		}
 	}
 }

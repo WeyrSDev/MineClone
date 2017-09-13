@@ -58,36 +58,40 @@ void ScenePlaying::updatePlaying(float delta)
 		m_camera.rotation.x = 80;
 	Vec3 velocity;
 
+	float speed = 8;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+		speed *= 2;
+
 	float angle = m_camera.rotation.y;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
-		velocity.x -= glm::cos(glm::radians(angle + 90)) * delta * 32;
-		velocity.z -= glm::sin(glm::radians(angle + 90)) * delta * 32;
-		velocity.y -= glm::tan(glm::radians(m_camera.rotation.x)) * delta * 32;
+		velocity.x -= glm::cos(glm::radians(angle + 90)) * delta * speed;
+		velocity.z -= glm::sin(glm::radians(angle + 90)) * delta * speed;
+		velocity.y -= glm::tan(glm::radians(m_camera.rotation.x)) * delta * speed;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
-		velocity.x += glm::cos(glm::radians(angle + 90)) * delta * 32;
-		velocity.z += glm::sin(glm::radians(angle + 90)) * delta * 32;
-		velocity.y += glm::tan(glm::radians(m_camera.rotation.x)) * delta * 32;
+		velocity.x += glm::cos(glm::radians(angle + 90)) * delta * speed;
+		velocity.z += glm::sin(glm::radians(angle + 90)) * delta * speed;
+		velocity.y += glm::tan(glm::radians(m_camera.rotation.x)) * delta * speed;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		velocity.x -= glm::cos(glm::radians(angle)) * delta * 4;
-		velocity.z -= glm::sin(glm::radians(angle)) * delta * 4;
+		velocity.x -= glm::cos(glm::radians(angle)) * delta * speed;
+		velocity.z -= glm::sin(glm::radians(angle)) * delta * speed;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		velocity.x += glm::cos(glm::radians(angle)) * delta * 4;
-		velocity.z += glm::sin(glm::radians(angle)) * delta * 4;
+		velocity.x += glm::cos(glm::radians(angle)) * delta * speed;
+		velocity.z += glm::sin(glm::radians(angle)) * delta * speed;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 	{
-		velocity.y += delta * 4;
+		velocity.y += delta * speed * 0.75f;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
 	{
-		velocity.y -= delta * 4;
+		velocity.y -= delta * speed * 0.75f;
 	}
 	m_camera.position = m_camera.position + velocity;
 }

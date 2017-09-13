@@ -3,9 +3,10 @@
 #include "map/Constants.hpp"
 #include "map/data/BlockDataBase.hpp"
 
-constexpr int WaterLevel = 40;
+constexpr int WaterLevel = 60;
+
 WorldGenerator::WorldGenerator(unsigned int seed):
-	m_heightMapNoise(seed * seed + 12312)
+	m_heightMap(seed * seed + 12312)
 {
 
 }
@@ -19,10 +20,9 @@ void WorldGenerator::generateChunk(Chunk& chunk)
 				for (int z = 0; z < ChunkLength; z++)
 				{
 					int wz = z + chunkPosition.y * ChunkLength;
-					int h = 60
-						+ 40 * m_heightMapNoise.noise(wx, wz, ChunkLength, 1.f / 30.f)
-						+ 20 * m_heightMapNoise.noise(wx, wz, ChunkLength, 1.f / 5.f)
-						+ 5 * m_heightMapNoise.noise(wx, wz, ChunkLength, 1.f / 2.f);
+
+					int h = m_heightMap.getHeight(wx, wz);
+
 					for (int y = 0; y <= WaterLevel || y <= h; y++)
 					{
 						Block block = static_cast<BlockId>(BlocksIds::air);
@@ -31,7 +31,7 @@ void WorldGenerator::generateChunk(Chunk& chunk)
 						Block top = static_cast<BlockId>(BlocksIds::dirt);
 						Block interior = static_cast<BlockId>(BlocksIds::stone);
 
-						if (h <= WaterLevel + 2)
+						if (h <= WaterLevel + 1)
 						{
 							surface = static_cast<BlockId>(BlocksIds::sand);
 							top = static_cast<BlockId>(BlocksIds::sand);
