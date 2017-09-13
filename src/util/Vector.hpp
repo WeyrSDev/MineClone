@@ -21,6 +21,7 @@ public:
 	Vec3 operator + (const Vec3& other) const;
 	Vec3 operator - (const Vec3& other) const;
 	Vec3 operator * (float scale) const;
+	bool operator ==(const Vec3& other) const;
 
 	float x, y, z;
 };
@@ -37,6 +38,7 @@ public:
 	Vec2 operator + (const Vec2& other) const;
 	Vec2 operator - (const Vec2& other) const;
 	Vec2 operator * (float scale) const;
+	bool operator ==(const Vec2& other) const;
 
 	float x, y;
 };

@@ -37,6 +37,11 @@ Vec3 Vec3::operator * (float scale) const
 	return Vec3(x * scale, y * scale, z * scale);
 }
 
+bool Vec3::operator == (const Vec3& other) const
+{
+	return x == other.x && y == other.y && z == other.z;
+}
+
 Vec2::Vec2(float _x, float _y)
 {
 	x = _x;
@@ -71,4 +76,9 @@ Vec2 Vec2::operator - (const Vec2& other) const
 Vec2 Vec2::operator * (float scale) const
 {
 	return Vec2(x * scale, y * scale);
+}
+
+bool Vec2::operator == (const Vec2& other) const
+{
+	return x == other.x && y == other.y;
 }

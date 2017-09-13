@@ -3,7 +3,7 @@
 #include "map/Constants.hpp"
 #include "map/data/BlockDataBase.hpp"
 
-constexpr int WaterLevel = 55;
+constexpr int WaterLevel = 40;
 WorldGenerator::WorldGenerator(unsigned int seed):
 	m_heightMapNoise(seed * seed + 12312)
 {
@@ -20,7 +20,7 @@ void WorldGenerator::generateChunk(Chunk& chunk)
 				{
 					int wz = z + chunkPosition.y * ChunkLength;
 					int h = 60
-						+ 40 * m_heightMapNoise.noise(wx, wz, ChunkLength, 1.f / 8.f)
+						+ 40 * m_heightMapNoise.noise(wx, wz, ChunkLength, 1.f / 30.f)
 						+ 20 * m_heightMapNoise.noise(wx, wz, ChunkLength, 1.f / 5.f)
 						+ 5 * m_heightMapNoise.noise(wx, wz, ChunkLength, 1.f / 2.f);
 					for (int y = 0; y <= WaterLevel || y <= h; y++)

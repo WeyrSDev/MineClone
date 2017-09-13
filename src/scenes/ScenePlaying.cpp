@@ -5,11 +5,10 @@
 
 #include "Game.hpp"
 #include "map/MapFinite.hpp"
-
-Vec3 velocity;
+#include "map/MapInfinite.hpp"
 
 ScenePlaying::ScenePlaying(const Game& game) :
-	SceneBase(game), m_camera({{256, 82, 256}, {0, 0, 0}, 0}),
+	SceneBase(game), m_camera({{0, 82, 0}, {0, 0, 0}, 0}),
 	m_pause(0) 
 {
 	srand(time(NULL));
@@ -19,9 +18,7 @@ ScenePlaying::ScenePlaying(const Game& game) :
 	
 	sf::Mouse::setPosition(sf::Vector2i(centerX, centerY), m_game->getWindow());
 
-	m_map = std::make_unique<MapFinite>(32, rand());
-
-	velocity = Vec3();
+	m_map = std::make_unique<MapInfinite>(rand(), m_camera);
 }
 
 void ScenePlaying::update(float delta)
@@ -59,40 +56,40 @@ void ScenePlaying::updatePlaying(float delta)
 		m_camera.rotation.x = -80;
 	if (m_camera.rotation.x > 80)
 		m_camera.rotation.x = 80;
+	Vec3 velocity;
 
 	float angle = m_camera.rotation.y;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
-		velocity.x -= glm::cos(glm::radians(angle + 90)) * delta;
-		velocity.z -= glm::sin(glm::radians(angle + 90)) * delta;
-		velocity.y -= glm::tan(glm::radians(m_camera.rotation.x)) * delta;
+		velocity.x -= glm::cos(glm::radians(angle + 90)) * delta * 32;
+		velocity.z -= glm::sin(glm::radians(angle + 90)) * delta * 32;
+		velocity.y -= glm::tan(glm::radians(m_camera.rotation.x)) * delta * 32;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
-		velocity.x += glm::cos(glm::radians(angle + 90)) * delta;
-		velocity.z += glm::sin(glm::radians(angle + 90)) * delta;
-		velocity.y += glm::tan(glm::radians(m_camera.rotation.x)) * delta;
+		velocity.x += glm::cos(glm::radians(angle + 90)) * delta * 32;
+		velocity.z += glm::sin(glm::radians(angle + 90)) * delta * 32;
+		velocity.y += glm::tan(glm::radians(m_camera.rotation.x)) * delta * 32;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		velocity.x -= glm::cos(glm::radians(angle)) * delta;
-		velocity.z -= glm::sin(glm::radians(angle)) * delta;
+		velocity.x -= glm::cos(glm::radians(angle)) * delta * 4;
+		velocity.z -= glm::sin(glm::radians(angle)) * delta * 4;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		velocity.x += glm::cos(glm::radians(angle)) * delta;
-		velocity.z += glm::sin(glm::radians(angle)) * delta;
+		velocity.x += glm::cos(glm::radians(angle)) * delta * 4;
+		velocity.z += glm::sin(glm::radians(angle)) * delta * 4;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 	{
-		velocity.y += delta;
+		velocity.y += delta * 4;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
 	{
-		velocity.y -= delta;
+		velocity.y -= delta * 4;
 	}
 	m_camera.position = m_camera.position + velocity;
-	velocity = velocity * 0.95f;
 }
 
 void ScenePlaying::render()

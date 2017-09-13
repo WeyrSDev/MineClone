@@ -7,6 +7,7 @@ class MasterRenderer;
 
 class Chunk {
 public:
+	Chunk() = default;
 	Chunk(Vec2 position, const MapBase* const map);
 
 	Vec3 toWorldPosition(int x, int y, int z) const;

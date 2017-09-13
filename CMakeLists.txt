@@ -13,7 +13,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
         link_libraries(opengl32 glew32)
 endif()
 if (CMAKE_SYSTEM_NAME    MATCHES "Linux")
-        link_libraries(GL GLEW)
+        link_libraries(GL GLEW pthread)
 endif()
 link_libraries(sfml-system sfml-window sfml-graphics)
 
