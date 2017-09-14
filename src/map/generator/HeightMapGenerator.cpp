@@ -13,9 +13,9 @@ HeightMapGenerator::HeightMapGenerator(unsigned int seed):
 
 }
 
-unsigned int HeightMapGenerator::interpolation(float left, float right, float delta)
+unsigned int HeightMapGenerator::interpolation(float c00, float c10, float c01, float c11, float dx, float dy)
 {
-	return left + (right - left) * delta;
+	return c00 * (1 - dx) * (1 - dy) + c10 * dx * (1 - dy) + c01 * (1 - dx) * dy + c11 * dx * dy;
 }
 
 unsigned int HeightMapGenerator::getHeight(int x, int z)
@@ -36,10 +36,8 @@ unsigned int HeightMapGenerator::getHeight(int x, int z)
 	int h3 = getPointHeight(left, top + s);
 	int h4 = getPointHeight(left + s, top + s);
 	
-	int i1 = interpolation(h1, h2, xDelta);
-	int i2 = interpolation(h3, h4, xDelta);
 
-	return interpolation(i1, i2, zDelta);
+	return interpolation(h1, h2, h3, h4, xDelta, zDelta);
 }
 
 unsigned int HeightMapGenerator::getPointHeight(int x, int z)
