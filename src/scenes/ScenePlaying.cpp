@@ -67,13 +67,11 @@ void ScenePlaying::updatePlaying(float delta)
 	{
 		velocity.x -= glm::cos(glm::radians(angle + 90)) * delta * speed;
 		velocity.z -= glm::sin(glm::radians(angle + 90)) * delta * speed;
-		velocity.y -= glm::tan(glm::radians(m_camera.rotation.x)) * delta * speed;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
 		velocity.x += glm::cos(glm::radians(angle + 90)) * delta * speed;
 		velocity.z += glm::sin(glm::radians(angle + 90)) * delta * speed;
-		velocity.y += glm::tan(glm::radians(m_camera.rotation.x)) * delta * speed;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
@@ -87,11 +85,11 @@ void ScenePlaying::updatePlaying(float delta)
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 	{
-		velocity.y += delta * speed * 0.75f;
+		velocity.y += delta * speed;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
 	{
-		velocity.y -= delta * speed * 0.75f;
+		velocity.y -= delta * speed;
 	}
 	m_camera.position = m_camera.position + velocity;
 }
