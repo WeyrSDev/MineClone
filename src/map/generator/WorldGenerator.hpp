@@ -11,4 +11,5 @@ public:
 	void generateChunk(Chunk& chunk);
 private:
 	HeightMapGenerator m_heightMap;
+	Noise m_temperature;
 };

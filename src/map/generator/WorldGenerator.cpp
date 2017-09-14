@@ -5,8 +5,36 @@
 
 constexpr int WaterLevel = 60;
 
+enum class Biomes {
+	ocean,
+	desert, beach,
+	hills
+};
+
+Biomes getBiome(int height, float temp)
+{
+
+	if (height < WaterLevel)
+	{
+		return Biomes::ocean;
+	}
+
+	if (temp < -0.2f && height < 80)
+	{
+		return Biomes::desert;
+	}
+
+	if (temp < 0.1 && height < WaterLevel + 3)
+	{
+		return Biomes::beach;
+	}
+
+	return Biomes::hills;
+}
+
 WorldGenerator::WorldGenerator(unsigned int seed):
-	m_heightMap(seed * seed + 12312)
+	m_heightMap(seed * seed + 12312),
+	m_temperature(seed * seed + seed * 4 + 7432)
 {
 
 }
@@ -14,40 +42,42 @@ WorldGenerator::WorldGenerator(unsigned int seed):
 void WorldGenerator::generateChunk(Chunk& chunk)
 {
 	auto chunkPosition = chunk.getPosition();
-			for (int x = 0; x < ChunkLength; x++)
+	for (int x = 0; x < ChunkLength; x++)
+	{
+		int wx = x + chunkPosition.x * ChunkLength;
+		for (int z = 0; z < ChunkLength; z++)
+		{
+			Block surface = (BlockId) (BlocksIds::grass);
+			Block top = (BlockId) (BlocksIds::dirt);
+			Block interior = (BlockId) BlocksIds::stone;
+
+			int wz = z + chunkPosition.y * ChunkLength;
+
+			int h = m_heightMap.getHeight(wx, wz);
+			float temp = m_temperature.noise(wx, wz, ChunkLength, 1.f / 10.f);
+
+			if (getBiome(h, temp) != Biomes::hills)
 			{
-				int wx = x + chunkPosition.x * ChunkLength;
-				for (int z = 0; z < ChunkLength; z++)
-				{
-					int wz = z + chunkPosition.y * ChunkLength;
-
-					int h = m_heightMap.getHeight(wx, wz);
-
-					for (int y = 0; y <= WaterLevel || y <= h; y++)
-					{
-						Block block = static_cast<BlockId>(BlocksIds::air);
-						
-						Block surface = static_cast<BlockId>(BlocksIds::grass);
-						Block top = static_cast<BlockId>(BlocksIds::dirt);
-						Block interior = static_cast<BlockId>(BlocksIds::stone);
-
-						if (h <= WaterLevel + 1)
-						{
-							surface = static_cast<BlockId>(BlocksIds::sand);
-							top = static_cast<BlockId>(BlocksIds::sand);
-						}
-
-						if (y > h)
-							block = static_cast<BlockId>(BlocksIds::water);
-						else if (y == h)
-							block = surface;
-						else if (y > h - 5)
-							block = top;
-						else if (y < h)
-							block = interior;
-						
-						chunk.setBlock(x, y, z, block);
-					}
-				}
+				surface = (BlockId) BlocksIds::sand;
+				top = (BlockId) BlocksIds::sand;
 			}
+
+			for (int y = 0; y <= WaterLevel || y <= h; y++)
+			{
+				Block block = (BlockId) BlocksIds::air;
+				
+
+				if (y > h)
+					block = (BlockId) BlocksIds::water;
+				else if (y == h)
+					block = surface;
+				else if (y > h - 5)
+					block = top;
+				else if (y < h)
+					block = interior;
+				
+				chunk.setBlock(x, y, z, block);
+			}
+		}
+	}
 }

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "map/Constants.hpp"
 
-constexpr int BaseLevel = 50;
+constexpr int BaseLevel = 60;
 
 HeightMapGenerator::HeightMapGenerator(unsigned int seed):
 	m_heightMap1(seed + 1232131),
@@ -44,13 +44,14 @@ unsigned int HeightMapGenerator::getHeight(int x, int z)
 
 unsigned int HeightMapGenerator::getPointHeight(int x, int z)
 {
-	unsigned int h1 = 50 * m_heightMap1.noise(x, z, ChunkLength, 1.f / 20.f)
+	unsigned int h1 =  10
+		+ 20 * m_heightMap1.noise(x, z, ChunkLength, 1.f / 30.f)
 		+ 10 * m_heightMap1.noise(x, z, ChunkLength, 1.f / 2.f);
 	unsigned int h2 =  10
 		+ 40 * m_heightMap2.noise(x, z, ChunkLength, 1.f / 10.f)
 		+ 15 * m_heightMap2.noise(x, z, ChunkLength, 1.f / 3.f);
 
-	float noise = m_heightMap3.noise(x, z, ChunkLength, 1.f / 5.f);
+	float noise = m_heightMap3.noise(x, z, ChunkLength, 1.f / 2.f);
 
-	return BaseLevel + (noise < 0.25f ? h1 : h2);
+	return BaseLevel + (noise < 0 ? h1 : h2);
 }
