@@ -19,6 +19,8 @@ Mesh::~Mesh()
 
 Mesh::Mesh(Mesh&& mesh)
 {
+	destroy();
+	
 	m_VBO = mesh.m_VBO;
 	m_VAO = mesh.m_VAO;
 	m_EBO = mesh.m_EBO;
@@ -29,6 +31,8 @@ Mesh::Mesh(Mesh&& mesh)
 
 Mesh& Mesh::operator=(Mesh&& mesh)
 {
+	destroy();
+	
 	m_VBO = mesh.m_VBO;
 	m_VAO = mesh.m_VAO;
 	m_EBO = mesh.m_EBO;
