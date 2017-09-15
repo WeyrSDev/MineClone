@@ -60,7 +60,7 @@ void ScenePlaying::updatePlaying(float delta)
 
 	float speed = 8;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
-		speed *= 2;
+		speed *= 4;
 
 	float angle = m_camera.rotation.y;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
