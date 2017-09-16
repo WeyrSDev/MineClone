@@ -19,7 +19,7 @@ Biomes getBiome(int height, float temp)
 		return Biomes::ocean;
 	}
 
-	if (temp < -0.2f && height < 80)
+	if (temp < -0.2f)
 	{
 		return Biomes::desert;
 	}
@@ -54,7 +54,7 @@ void WorldGenerator::generateChunk(Chunk& chunk)
 			int wz = z + chunkPosition.y * ChunkLength;
 
 			int h = m_heightMap.getHeight(wx, wz);
-			float temp = m_temperature.noise(wx, wz, ChunkLength, 1.f / 10.f);
+			float temp = m_temperature.noise(wx, wz, ChunkLength, 1.f / 30.f);
 
 			if (getBiome(h, temp) != Biomes::hills)
 			{
