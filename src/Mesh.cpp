@@ -2,6 +2,14 @@
 
 #include <stdio.h>
 
+void MeshData::clear()
+{
+	vertex.clear();
+	indices.clear();
+
+	vertex.shrink_to_fit();
+	indices.shrink_to_fit();
+}
 Mesh::Mesh():
 	m_VAO(0), m_VBO(0), m_EBO(0), m_indicesCount(0) 
 { }

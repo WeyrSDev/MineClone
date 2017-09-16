@@ -14,6 +14,7 @@ struct VertexData {
 };
 
 struct MeshData {
+	void clear();
 	std::vector<VertexData> vertex;
 	std::vector<GLuint> indices;
 };

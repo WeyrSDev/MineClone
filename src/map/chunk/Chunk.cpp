@@ -8,10 +8,11 @@
 Chunk::Chunk(Vec2 position, const MapBase* const map) :
 	m_position(position), m_map(map)
 {
-
-	for (int i = 0; i < ChunkHeight; i++)
+	m_sections.resize(ChunkHeight);
+	int i = 0;
+	for (auto& section : m_sections)
 	{
-		m_sections.push_back(ChunkSection(Vec3(position.x, i, position.y), m_map));
+		section = ChunkSection(Vec3(position.x, i++, position.y), m_map);
 	}
 }
 

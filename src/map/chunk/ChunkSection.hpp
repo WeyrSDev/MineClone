@@ -19,7 +19,11 @@ struct ChunkMeshes {
 class ChunkSection
 {
 public:
+	ChunkSection() = default;
 	ChunkSection(Vec3 position, const MapBase* const map);
+
+	ChunkSection(ChunkSection&&);
+	ChunkSection& operator=(ChunkSection&&);
 
 	Vec3 toWorldPosition(int x, int y, int z) const;
 
@@ -38,11 +42,11 @@ private:
 	bool outOfBound(int x, int y, int z) const;
 
 	bool m_modified;
-	const Vec3 m_position;
+	Vec3 m_position;
 	std::array<Block, ChunkVolume> m_blocks;
 	
 	ChunkMeshes m_meshes;
 	bool m_modifyMeshes;
 
-	const MapBase* const m_map;
+	const MapBase* m_map;
 };

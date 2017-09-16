@@ -22,12 +22,12 @@ ChunkBuilder::ChunkBuilder(const ChunkSection& chunkSection):
 	}
 }
 
-MeshData ChunkBuilder::getSolidData()
+MeshData& ChunkBuilder::getSolidData()
 {
 	return m_solidMesh;
 }
 
-MeshData ChunkBuilder::getLiquidData()
+MeshData& ChunkBuilder::getLiquidData()
 {
 	return m_liquidMesh;
 }

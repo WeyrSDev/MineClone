@@ -17,6 +17,27 @@ ChunkSection::ChunkSection(Vec3 position, const MapBase* const map):
 	}
 }
 
+ChunkSection::ChunkSection(ChunkSection&& chunk):
+	m_map(chunk.m_map), m_position(chunk.m_position), m_modified(chunk.m_modified),
+	m_modifyMeshes(chunk.m_modifyMeshes)
+{
+	m_blocks = std::move(chunk.m_blocks);
+	m_meshes = std::move(chunk.m_meshes);
+}
+
+ChunkSection& ChunkSection::operator=(ChunkSection&& chunk)
+{
+	m_map = chunk.m_map;
+	m_position = chunk.m_position;
+	m_modified = chunk.m_modified;
+	m_modifyMeshes = chunk.m_modifyMeshes;
+
+	m_blocks = std::move(chunk.m_blocks);
+	m_meshes = std::move(chunk.m_meshes);
+
+	return *this;
+}
+
 void ChunkSection::setBlock(int x, int y, int z, Block block)
 {
 	if (outOfBound(x, y, z))
@@ -57,6 +78,9 @@ void ChunkSection::update()
 		m_meshes.solid = Mesh(m_meshes.solidData);
 		m_meshes.liquid = Mesh(m_meshes.liquidData);
 
+		m_meshes.solidData.clear();
+		m_meshes.liquidData.clear();
+
 		m_modifyMeshes = false;
 	}
 }
@@ -65,8 +89,8 @@ void ChunkSection::regenerateMeshData()
 {
 	ChunkBuilder builder(*this);
 
-	m_meshes.solidData = builder.getSolidData();
-	m_meshes.liquidData = builder.getLiquidData();
+	m_meshes.solidData = std::move(builder.getSolidData());
+	m_meshes.liquidData = std::move(builder.getLiquidData());
 	m_modifyMeshes = true;
 	m_modified = false;
 }
