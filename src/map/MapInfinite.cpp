@@ -1,5 +1,7 @@
 #include "MapInfinite.hpp"
 
+#include "data/BlockDataBase.hpp"
+
 ChunkId::ChunkId(sf::Int32 _x, sf::Int32 _z)
 {
 	x = _x;
@@ -146,7 +148,7 @@ Block MapInfinite::getBlock(int x, int y, int z) const
 	auto chunk = getChunk(chunkPos.x, chunkPos.z);
 	if (!chunk || y < 0)
 	{
-		return 1;
+		return (BlockId) BlocksIds::stone;
 	}
 
 	auto r = toChunkRelativePosition(x, y, z);
@@ -156,6 +158,10 @@ Block MapInfinite::getBlock(int x, int y, int z) const
 
 void MapInfinite::setBlock(int x, int y, int z, Block block)
 {
+	if (y <= 0 || y >= BlockHeight)
+	{
+		return;
+	}
 	auto chunkPos = getChunkPosition(x, z);
 	auto chunk = getChunk(chunkPos.x, chunkPos.z);
 	if (!chunk)

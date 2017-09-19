@@ -24,6 +24,7 @@ void Chunk::setBlock(int x, int y, int z, Block block)
 	}
 
 	int sy = y % ChunkLength;
+	int i = y / ChunkLength;
 
 	m_sections[y / ChunkLength].setBlock(x, sy, z, block);
 
@@ -32,7 +33,7 @@ void Chunk::setBlock(int x, int y, int z, Block block)
 		auto chunk = m_map->getChunk(m_position.x - 1, m_position.y);
 		if (chunk)
 		{
-			chunk->getSection(sy).modify();
+			chunk->getSection(i).modify();
 		}
 	}
 	if (x == 15)
@@ -40,7 +41,7 @@ void Chunk::setBlock(int x, int y, int z, Block block)
 		auto chunk = m_map->getChunk(m_position.x + 1, m_position.y);
 		if (chunk)
 		{
-			chunk->getSection(sy).modify();
+			chunk->getSection(i).modify();
 		}
 	}
 	
@@ -49,7 +50,7 @@ void Chunk::setBlock(int x, int y, int z, Block block)
 		auto chunk = m_map->getChunk(m_position.x, m_position.y - 1);
 		if (chunk)
 		{
-			chunk->getSection(sy).modify();
+			chunk->getSection(i).modify();
 		}
 	}
 	if (z == 15)
@@ -57,16 +58,16 @@ void Chunk::setBlock(int x, int y, int z, Block block)
 		auto chunk = m_map->getChunk(m_position.x, m_position.y + 1);
 		if (chunk)
 		{
-			chunk->getSection(sy).modify();
+			chunk->getSection(i).modify();
 		}
 	}
-	if (sy == 0 || y > 0)
+	if (sy == 0)
 	{
-		getSection(sy - 1).modify();
+		getSection(i - 1).modify();
 	}
-	if (sy == 15 || y < BlockHeight)
+	if (sy == 15 && y < BlockHeight)
 	{
-		getSection(sy + 1).modify();
+		getSection(i + 1).modify();
 	}
 }
 

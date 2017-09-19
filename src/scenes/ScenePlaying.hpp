@@ -5,6 +5,7 @@
 
 #include "renderer/MasterRenderer.hpp"
 #include "map/MapBase.hpp"
+#include "player/Player.hpp"
 
 class ScenePlaying : public SceneBase {
 public:
@@ -19,5 +20,6 @@ private:
 	Camera m_camera;
 
 	std::unique_ptr<MapBase> m_map;
+	std::unique_ptr<Player> m_player;
 	bool m_pause;
 };

@@ -1,5 +1,7 @@
 #include "Vector.hpp"
 
+#include <math.h>
+
 Vec3::Vec3(float _x, float _y, float _z)
 {
 	x = _x;
@@ -10,6 +12,11 @@ Vec3::Vec3(float _x, float _y, float _z)
 Vec3::Vec3():
 	x(0), y(0), z(0)
 {
+}
+
+float Vec3::mod()
+{
+	return sqrt(x * x + y * y + z * z);
 }
 
 Vec3::operator glm::vec3() const
@@ -51,6 +58,11 @@ Vec2::Vec2(float _x, float _y)
 Vec2::Vec2():
 	x(0), y(0)
 {
+}
+
+float Vec2::mod()
+{
+	return sqrt(x * x + y * y);
 }
 
 Vec2::operator glm::vec2() const
