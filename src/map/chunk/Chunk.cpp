@@ -5,6 +5,19 @@
 #include "map/MapBase.hpp"
 #include "map/data/BlockDataBase.hpp"
 
+ChunkId::ChunkId(sf::Int32 _x, sf::Int32 _z)
+{
+	x = _x;
+	z = _z;
+}
+
+ChunkId::operator ChunkKey ()
+{
+	sf::Int32 arr[2] = {x, z};
+
+	return *((sf::Int64*) arr);
+}
+
 Chunk::Chunk(Vec2 position, const MapBase* const map) :
 	m_position(position), m_map(map)
 {

@@ -3,6 +3,15 @@
 #include "ChunkSection.hpp"
 #include "map/Constants.hpp"
 
+typedef sf::Uint64 ChunkKey;
+
+struct ChunkId {
+	ChunkId(sf::Int32 _x, sf::Int32 _z);
+	sf::Int32 x;
+	sf::Int32 z;
+	operator ChunkKey();
+};
+
 class MasterRenderer;
 
 class Chunk {

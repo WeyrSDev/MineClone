@@ -1,19 +1,7 @@
 #include "MapInfinite.hpp"
 
+#include "Functions.hpp"
 #include "data/BlockDataBase.hpp"
-
-ChunkId::ChunkId(sf::Int32 _x, sf::Int32 _z)
-{
-	x = _x;
-	z = _z;
-}
-
-ChunkId::operator ChunkKey ()
-{
-	sf::Int32 arr[2] = {x, z};
-
-	return *((sf::Int64*) arr);
-}
 
 MapInfinite::MapInfinite(unsigned int seed, const Camera& camera):
 	m_generator(seed), m_quit(false),
@@ -44,7 +32,7 @@ void MapInfinite::update(MasterRenderer& renderer)
 	std::vector<ChunkKey> chunksToDelete;
 	for (auto& chunk : m_chunks)
 	{
-		auto camPos = getChunkPosition(m_camera.position.x, m_camera.position.z);
+		auto camPos = getChunkFromBlock(m_camera.position.x, m_camera.position.z);
 		auto chunkPos = chunk.second.getPosition();
 
 		int deltaX = camPos.x -  chunkPos.x;
@@ -74,7 +62,7 @@ void MapInfinite::loadThread()
 	while(!m_quit)
 	{
 
-		auto camPos = getChunkPosition(m_camera.position.x, m_camera.position.z);
+		auto camPos = getChunkFromBlock(m_camera.position.x, m_camera.position.z);
 
 		for (int i = 0; i <= m_renderDistance; i++)
 		{
@@ -101,7 +89,7 @@ void MapInfinite::loadThread()
 
 			for (int z = top; z <= bottom; z++)
 			{
-				auto newCamPos = getChunkPosition(m_camera.position.x, m_camera.position.z);
+				auto newCamPos = getChunkFromBlock(m_camera.position.x, m_camera.position.z);
 				if (newCamPos.x != camPos.x || newCamPos.z != camPos.z)
 					break;
 				std::this_thread::sleep_for(std::chrono::milliseconds(sleepFor));
@@ -117,7 +105,7 @@ void MapInfinite::loadThread()
 
 			for (int x = left; x <= right; x++)
 			{
-				auto newCamPos = getChunkPosition(m_camera.position.x, m_camera.position.z);
+				auto newCamPos = getChunkFromBlock(m_camera.position.x, m_camera.position.z);
 				if (newCamPos.x != camPos.x || newCamPos.z != camPos.z)
 					break;
 				std::this_thread::sleep_for(std::chrono::milliseconds(sleepFor));
@@ -130,7 +118,7 @@ void MapInfinite::loadThread()
 				createChunk(x, bottom);					
 				m_mutex.unlock();
 			}
-			auto newCamPos = getChunkPosition(m_camera.position.x, m_camera.position.z);
+			auto newCamPos = getChunkFromBlock(m_camera.position.x, m_camera.position.z);
 			if (newCamPos.x != camPos.x || newCamPos.z != camPos.z)
 				break;
 		}
@@ -144,7 +132,7 @@ Block MapInfinite::getBlock(int x, int y, int z) const
 		return 0;
 	}
 
-	auto chunkPos = getChunkPosition(x, z);
+	auto chunkPos = getChunkFromBlock(x, z);
 	auto chunk = getChunk(chunkPos.x, chunkPos.z);
 	if (!chunk || y < 0)
 	{
@@ -162,7 +150,7 @@ void MapInfinite::setBlock(int x, int y, int z, Block block)
 	{
 		return;
 	}
-	auto chunkPos = getChunkPosition(x, z);
+	auto chunkPos = getChunkFromBlock(x, z);
 	auto chunk = getChunk(chunkPos.x, chunkPos.z);
 	if (!chunk)
 	{
@@ -203,25 +191,4 @@ void MapInfinite::createChunk(int x, int z)
 		m_secondMutex.unlock();
 		m_generator.generateChunk(m_chunks.find(id)->second);
 	}
-}
-
-ChunkId MapInfinite::getChunkPosition(int x, int z) const
-{
-	int xRes = x / ChunkLength;
-	int zRes = z / ChunkLength;
-
-	if (x < 0 && x % ChunkLength != 0) xRes--;
-	if (z < 0 && z % ChunkLength != 0) zRes--;
-
-	return ChunkId(xRes, zRes);
-}
-
-Vec3 MapInfinite::toChunkRelativePosition(int x, int y, int z) const
-{
-	x %= ChunkLength;
-	if (x < 0) x += ChunkLength;
-	z %= ChunkLength;
-	if (z < 0) z += ChunkLength;
-
-	return Vec3(x, y, z);
 }

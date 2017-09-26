@@ -8,15 +8,6 @@
 #include "MapBase.hpp"
 #include "generator/WorldGenerator.hpp"
 
-typedef sf::Uint64 ChunkKey;
-
-struct ChunkId {
-	ChunkId(sf::Int32 _x, sf::Int32 _z);
-	sf::Int32 x;
-	sf::Int32 z;
-	operator ChunkKey();
-};
-
 class MapInfinite : public MapBase {
 public:
 	MapInfinite(unsigned int seed, const Camera& camera);
@@ -32,8 +23,6 @@ private:
 	const Camera& m_camera;
 
 	void createChunk(int x, int z);
-	ChunkId getChunkPosition(int x, int z) const;
-	Vec3 toChunkRelativePosition(int x, int y, int z) const;
 
 	void loadThread();
 

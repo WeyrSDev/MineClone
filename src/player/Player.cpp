@@ -1,9 +1,11 @@
 #include "Player.hpp"
 
+#include "map/Functions.hpp"
+#include "util/RayCast.hpp"
 #include "Game.hpp"
 
 Player::Player(Vec3 position, MapBase* map, const Game* const game):
-	m_position(position), m_map(map), m_game(game)
+	m_position(position), m_camPos(0.4, 1.6, 0.4), m_map(map), m_game(game)
 {
 
 }
@@ -12,24 +14,15 @@ Player::Player(Vec3 position, MapBase* map, const Game* const game):
 void Player::update(float delta)
 {
 
-	updateMouse();
+	updateMouse(delta);
 	updateKeyboard(delta);
 
 	m_position = m_position + m_velocity;
 
 	m_velocity = m_velocity * 0.0f;
-
-	for (int x = -2; x < 3; x++)
-	for (int z = -2; z < 3; z++)
-	for (int y = -1; y < 3; y++)
-	{
-		Vec3 block = m_position + Vec3(x, y, z);
-
-		m_map->setBlock(block.x, block.y, block.z, 0);
-	}
 }
 
-void Player::updateMouse()
+void Player::updateMouse(float delta)
 {
 	int centerX = m_game->getWindow().getSize().x / 2;
 	int centerY = m_game->getWindow().getSize().y / 2;
@@ -51,6 +44,21 @@ void Player::updateMouse()
 		m_rotation.x = -80;
 	if (m_rotation.x > 80)
 		m_rotation.x = 80;
+
+
+	static float counter = 0;
+	if (counter >= 0)
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+		{
+			counter = -0.1;
+			breakBlock();
+		}
+	}
+	else
+	{
+		counter += delta;
+	}
 }
 
 void Player::updateKeyboard(float delta)
@@ -93,9 +101,33 @@ void Player::updateKeyboard(float delta)
 Camera Player::getCam()
 {
 	Camera camera;
-	camera.position = m_position + Vec3(0.4, 1.6, 0.4);
+	camera.position = m_position + m_camPos;
 	camera.rotation = m_rotation;
 	camera.aspectRatio = (float) m_game->getWindow().getSize().x / m_game->getWindow().getSize().y;
 
 	return camera;
+}
+
+
+void Player::breakBlock()
+{
+	RayCast ray(m_rotation, m_position + m_camPos);
+
+	for (float s = 0; s < 3; s += 0.01)
+	{
+		Vec3 pos = ray.step(0.01);
+		Vec3 blockPos = getBlockFromPoint(pos);
+
+		Block block = m_map->getBlock(blockPos.x, blockPos.y, blockPos.z);
+		if (block.getData().collidable)
+		{
+			m_map->setBlock(blockPos.x, blockPos.y, blockPos.z, 0);
+			break;
+		}
+	}
+}
+
+void Player::pushBlock(BlockId id)
+{
+
 }
