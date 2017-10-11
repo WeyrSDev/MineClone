@@ -19,7 +19,8 @@ ScenePlaying::ScenePlaying(const Game& game) :
 	sf::Mouse::setPosition(sf::Vector2i(centerX, centerY), m_game->getWindow());
 
 	m_map = std::make_unique<MapInfinite>(rand(), m_camera);
-	m_player = std::make_unique<Player>(Vec3(0, 82, 0), m_map.get(), m_game);
+	m_player = std::make_unique<Player>(Vec3(0, 0, 0), m_map.get(), m_game);
+	m_map->spawnPlayer(Vec2(0, 0), *m_player);
 }
 
 void ScenePlaying::update(float delta)

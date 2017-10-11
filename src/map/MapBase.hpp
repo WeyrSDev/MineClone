@@ -4,11 +4,14 @@
 #include "chunk/Chunk.hpp"
 #include "Camera.hpp"
 
+class Player;
+
 class MapBase {
 public:
 	virtual ~MapBase() = default;
 
 
+	virtual void spawnPlayer(Vec2 pos, Player& player) = 0;
 	virtual Block getBlock(int x, int y, int z) const  = 0;
 	virtual void setBlock(int x, int y, int z, Block block) = 0;
 	virtual void update(MasterRenderer& renderer) = 0;

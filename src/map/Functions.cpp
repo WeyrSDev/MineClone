@@ -4,25 +4,21 @@
 
 Vec3 getBlockFromPoint(Vec3 point)
 {
-	int bx = point.x;
-	int by = point.y;
-	int bz = point.z;
+	auto dx = point.x - (int) point.x;
+	auto dy = point.y - (int) point.y;
+	auto dz = point.z - (int) point.z;
 
-	if (point.x < 0) bx --;
-	if (point.z < 0) bz --;
+	if (dx < 0) dx = 1 + dx;
+	if (dy < 0) dy = 1 + dy;
+	if (dz < 0) dz = 1 + dz;
 
-	return Vec3(bx, by, bz);
+	return Vec3(point.x - dx, point.y - dy, point.z - dz);
 }
 
 ChunkId getChunkFromBlock(int x, int z)
 {
-	int xRes = x / ChunkLength;
-	int zRes = z / ChunkLength;
-
-	if (x < 0 && x % ChunkLength != 0) xRes--;
-	if (z < 0 && z % ChunkLength != 0) zRes--;
-
-	return ChunkId(xRes, zRes);
+	auto rPos = toChunkRelativePosition(x, 0, z);
+	return ChunkId((x - rPos.x) / ChunkLength, (z - rPos.z) / ChunkLength);
 }
 
 Vec3 toChunkRelativePosition(int x, int y, int z)

@@ -1,5 +1,6 @@
 #include "MapInfinite.hpp"
 
+#include "player/Player.hpp"
 #include "Functions.hpp"
 #include "data/BlockDataBase.hpp"
 
@@ -7,14 +8,6 @@ MapInfinite::MapInfinite(unsigned int seed, const Camera& camera):
 	m_generator(seed), m_quit(false),
 	m_renderDistance(16), m_camera(camera)
 {
-	for (int z = -2; z < 3; z++)
-	{
-		for (int x = -2; x < 3; x++)
-		{
-			createChunk(x, z);
-		}
-	}
-	
 	for (int i = 0; i < 1; i++)
 		m_threads.push_back(std::thread(&MapInfinite::loadThread, this));
 }
@@ -24,6 +17,32 @@ MapInfinite::~MapInfinite()
 	m_quit = true;
 	for (auto& thread : m_threads)
 		thread.join();
+}
+
+void MapInfinite::spawnPlayer(Vec2 pos, Player& player)
+{
+	float playerHeight = player.getCollbox().size.y;
+	int cx = pos.x;
+	int cz = pos.y;
+
+	m_mutex.lock();
+	for (int z = cz - 2; z < cz + 3; z++)
+	{
+		for (int x = cx - 2; x < cx + 3; x++)
+		{
+			createChunk(x, z);
+		}
+	}
+
+	for (int y = BlockHeight; y > 1; y--)
+	{
+		if (getBlock(cx, y, cz).getData().collidable)
+		{
+			player.setPosition(Vec3(cx, y + playerHeight, cz));
+			break;
+		}
+	}
+	m_mutex.unlock();
 }
 
 void MapInfinite::update(MasterRenderer& renderer)

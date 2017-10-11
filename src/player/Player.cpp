@@ -5,7 +5,7 @@
 #include "Game.hpp"
 
 Player::Player(Vec3 position, MapBase* map, const Game* const game):
-	m_position(position), m_camPos(0.4, 1.6, 0.4), m_map(map), m_game(game)
+	m_collbox(position, Vec3(0.8, 1.8, 0.8)), m_camPos(0.4, 1.6, 0.4), m_map(map), m_game(game)
 {
 
 }
@@ -17,8 +17,12 @@ void Player::update(float delta)
 	updateMouse(delta);
 	updateKeyboard(delta);
 
-	m_position = m_position + m_velocity;
-
+	//m_collbox.pos = m_collbox.pos + m_velocity;
+	
+	move(Vec3(m_velocity.x, 0, 0));
+	move(Vec3(0, 0, m_velocity.z));
+	move(Vec3(0, m_velocity.y, 0));
+	
 	m_velocity = m_velocity * 0.0f;
 }
 
@@ -101,17 +105,26 @@ void Player::updateKeyboard(float delta)
 Camera Player::getCam()
 {
 	Camera camera;
-	camera.position = m_position + m_camPos;
+	camera.position = m_collbox.pos + m_camPos;
 	camera.rotation = m_rotation;
 	camera.aspectRatio = (float) m_game->getWindow().getSize().x / m_game->getWindow().getSize().y;
 
 	return camera;
 }
 
+void Player::setPosition(Vec3 pos)
+{
+	m_collbox.pos = pos;
+}
+
+const AABB& Player::getCollbox()
+{
+	return m_collbox;
+}
 
 void Player::breakBlock()
 {
-	RayCast ray(m_rotation, m_position + m_camPos);
+	RayCast ray(m_rotation, m_collbox.pos + m_camPos);
 
 	for (float s = 0; s < 3; s += 0.01)
 	{
@@ -130,4 +143,59 @@ void Player::breakBlock()
 void Player::pushBlock(BlockId id)
 {
 
+}
+
+void Player::move(Vec3 delta)
+{
+	Vec3 newPos = m_collbox.pos + delta;
+	Vec3 c1 = getBlockFromPoint(newPos);
+	Vec3 c2 = getBlockFromPoint(newPos + m_collbox.size);
+
+	for(int x = c1.x; x <= c2.x; x++)
+	for(int z = c1.z; z <= c2.z; z++)
+	for(int y = c1.y; y <= c2.y; y++)
+	{
+		Block block = m_map->getBlock(x, y, z);
+		const BlockData& data = block.getData();
+
+		if (!data.collidable)
+		{
+			continue;
+		}
+
+		AABB newCollbox = m_collbox;
+		newCollbox.pos = newPos;
+		AABB blockCollbox = data.collbox;
+		blockCollbox.pos = Vec3(x, y, z);
+		if (!newCollbox.collide(blockCollbox) || m_collbox.collide(blockCollbox))
+		{
+			continue;
+		}
+
+		if (delta.x > 0)
+		{
+			newPos.x = x - m_collbox.size.x;
+		}
+		else if (delta.x < 0)
+		{
+			newPos.x = x + 1;
+		}
+		if (delta.y > 0)
+		{
+			newPos.y = y - m_collbox.size.y;
+		} 
+		else if (delta.y < 0)
+		{
+			newPos.y = y + 1;
+		}
+		if (delta.z > 0)
+		{
+			newPos.z = z - m_collbox.size.z;
+		} 
+		else if (delta.z < 0)
+		{
+			newPos.z = z + 1;
+		}
+	}
+	m_collbox.pos = newPos;
 }

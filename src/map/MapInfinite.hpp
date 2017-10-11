@@ -13,6 +13,8 @@ public:
 	MapInfinite(unsigned int seed, const Camera& camera);
 	~MapInfinite();
 
+	void spawnPlayer(Vec2 pos, Player& player);
+
 	void update(MasterRenderer& renderer);
 
 	Block getBlock(int x, int y, int z) const;
